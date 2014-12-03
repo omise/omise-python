@@ -486,6 +486,10 @@ class ChargeTest(_ResourceMixin):
         from .. import Card
         return Card
 
+    def _getCollectionClass(self):
+        from .. import Collection
+        return Collection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'card': {
@@ -688,6 +692,102 @@ class ChargeTest(_ResourceMixin):
         self.assertEqual(charge.amount, 120000)
         self.assertEqual(charge.currency, 'thb')
         self.assertRequest(api_call, 'https://api.omise.co/charges/chrg_test')
+
+    @mock.patch('requests.get')
+    def test_retrieve_no_args(self, api_call):
+        class_ = self._getTargetClass()
+        collection_class_ = self._getCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2014-11-20T14:17:24+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 2,
+            "data": [
+                {
+                    "object": "charge",
+                    "id": "chrg_test_1",
+                    "livemode": false,
+                    "location": "/charges/chrg_test_1",
+                    "amount": 200000,
+                    "currency": "thb",
+                    "description": "on Johns mastercard",
+                    "capture": true,
+                    "authorized": false,
+                    "captured": false,
+                    "transaction": null,
+                    "failure_code": null,
+                    "failure_message": null,
+                    "card": {
+                        "object": "card",
+                        "id": "card_test_1",
+                        "livemode": false,
+                        "location": "/customers/cust_test/cards/card_test_1",
+                        "country": "us",
+                        "city": null,
+                        "postal_code": null,
+                        "financing": "debit",
+                        "last_digits": "4242",
+                        "brand": "Visa",
+                        "expiration_month": 10,
+                        "expiration_year": 2018,
+                        "fingerprint": null,
+                        "name": "john_mastercard",
+                        "security_code_check": false,
+                        "created": "2014-11-20T01:30:37Z"
+                    },
+                    "customer": "cust_test",
+                    "ip": "133.71.33.7",
+                    "created": "2014-11-20T01:32:07Z"
+                },
+                {
+                    "object": "charge",
+                    "id": "chrg_test_2",
+                    "livemode": false,
+                    "location": "/charges/chrg_test_2",
+                    "amount": 100000,
+                    "currency": "thb",
+                    "description": "on Johns personal visa",
+                    "capture": true,
+                    "authorized": false,
+                    "captured": false,
+                    "transaction": null,
+                    "failure_code": null,
+                    "failure_message": null,
+                    "card": {
+                        "object": "card",
+                        "id": "card_test_2",
+                        "livemode": false,
+                        "location": "/customers/cust_test/cards/card_test_2",
+                        "country": "us",
+                        "city": "Dunkerque",
+                        "postal_code": "59140",
+                        "financing": "debit",
+                        "last_digits": "4242",
+                        "brand": "Visa",
+                        "expiration_month": 10,
+                        "expiration_year": 2015,
+                        "fingerprint": null,
+                        "name": "john_personal_visa",
+                        "security_code_check": false,
+                        "created": "2014-11-20T01:30:27Z"
+                    },
+                    "customer": "cust_test",
+                    "ip": "133.71.33.7",
+                    "created": "2014-11-20T01:32:07Z"
+                }
+            ]
+        }""")
+
+        charges = class_.retrieve()
+        self.assertTrue(isinstance(charges, collection_class_))
+        self.assertTrue(isinstance(charges[0], class_))
+        self.assertTrue(charges[0].id, 'chrg_test_1')
+        self.assertTrue(charges[0].amount, 200000)
+        self.assertTrue(charges[1].id, 'chrg_test_2')
+        self.assertTrue(charges[1].amount, 100000)
+        self.assertRequest(api_call, 'https://api.omise.co/charges')
 
     @mock.patch('requests.patch')
     def test_update(self, api_call):

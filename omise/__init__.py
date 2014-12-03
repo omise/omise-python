@@ -560,7 +560,7 @@ class Charge(Base):
         return _as_object(request.send('post', 'charges', kwargs))
 
     @classmethod
-    def retrieve(cls, charge_id):
+    def retrieve(cls, charge_id=None):
         """Retrieve the charge details for the given :param:`charge_id`.
 
         :param charge_id: a charge id to retrieve.
@@ -568,7 +568,9 @@ class Charge(Base):
         :rtype: Charge
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('get', ('charges', charge_id)))
+        if charge_id:
+            return _as_object(request.send('get', ('charges', charge_id)))
+        return _as_object(request.send('get', 'charges'))
 
     def reload(self):
         """Reload the charge details.
