@@ -1,0 +1,70 @@
+# Omise Python Client
+
+## Installation
+
+The Omise Python client is not yet available in [PyPI](https://pypi.python.org/) at the moment. This means you have to use [Pip](https://pip.pypa.io/en/latest/) to install the package until we made the package available in PyPI:
+
+```
+pip install git+https://github.com/omise/omise-python.git#egg=omise
+```
+
+The Omise Python client supports the following Python versions:
+
+* Python 2.6
+* Python 2.7
+* Python 3.1
+* Python 3.2
+* Python 3.3
+
+## Usage
+
+Please refer to an example in [API documentation](https://docs.omise.co/) or the [help](https://docs.python.org/2/library/functions.html#help) function for documentation. For basic usage, you can use the module in your application by importing the `omise` module and set the secret key and public key:
+
+```python
+>>> import omise
+>>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+>>> omise.api_public = 'pkey_test_4xs8breq32civvobx15'
+```
+
+After both keys are set, you can now use all the APIs. For example, to create a new customer without any cards associated to the customer:
+
+```python
+>>> customer = omise.Customer.create(
+>>>    description='John Doe',
+>>>    email='john.doe@example.com'
+>>> )
+<Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
+```
+
+Then to retrieve, update and destroy that customer:
+
+```python
+>>> customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
+>>> customer.description('John W. Doe')
+>>> customer.update()
+<Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
+>>> customer.destroy()
+>>> customer.destroyed
+True
+```
+
+In case of any errors (such as authentication failure, invalid card and others as listed in [errors](https://docs.omise.co/api/errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raise. The application code must be handling these errors as appropriate.
+
+## Contributing
+
+The Omise Python client uses [Vagrant](https://www.vagrantup.com/) for development environment provisioning and require all changes to be tested against all supported Python versions. You can bootstrap the environment with the following instructions:
+
+1. Install [Vagrant](https://www.vagrantup.com/) with [provider](https://docs.vagrantup.com/v2/providers/index.html) of your choice (e.g. [VirtualBox](https://www.virtualbox.org/))
+2. Run `vagrant up` and read Vagrant's [Getting Started](https://docs.vagrantup.com/v2/getting-started/index.html) while waiting.
+
+After the box is up and running, you can now SSH to the server and run [tox](http://tox.readthedocs.org/en/latest/) to test against all supported Python versions:
+
+1. Run `vagrant ssh` to SSH into the provisioned box.
+2. Run `cd /vagrant` to navigate to working directory.
+3. Run `tox` to run tests against all supported Python versions.
+
+Any changes made locally to the source code will be automatically updated to the box. After you've done with the changes, please open a [Pull Request](https://github.com/omise/omise-python/pulls).
+
+## License
+
+See LICENSE.txt

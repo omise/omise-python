@@ -1,0 +1,9 @@
+*.pyc
+*.egg
+*.egg-info
+.vagrant/
+
+# Tests
+.coverage
+.noseids
+.tox/
