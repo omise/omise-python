@@ -411,6 +411,16 @@ class Token(Base):
         request = Request(api_public, api_vault)
         return _as_object(request.send('get', ('tokens', token_id)))
 
+    def reload(self):
+        """Reload the token details.
+
+        :rtype: Token
+        """
+        request = Request(api_secret, api_main)
+        return self._reload_data(
+            request.send('get',
+                         ('tokens', self._attributes['id'])))
+
 
 class Card(Base):
     """API class representing card details.
@@ -429,6 +439,16 @@ class Card(Base):
         >>> card.last_digits
         '4242'
     """
+
+    def reload(self):
+        """Reload the card details.
+
+        :rtype: Card
+        """
+        request = Request(api_secret, api_main)
+        return self._reload_data(
+            request.send('get',
+                         self._attributes['location']))
 
     def update(self, **kwargs):
         """Update the card information with the given card details.
@@ -549,6 +569,16 @@ class Charge(Base):
         """
         request = Request(api_secret, api_main)
         return _as_object(request.send('get', ('charges', charge_id)))
+
+    def reload(self):
+        """Reload the charge details.
+
+        :rtype: Charge
+        """
+        request = Request(api_secret, api_main)
+        return self._reload_data(
+            request.send('get',
+                         ('charges', self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the charge details with the given arguments.
@@ -674,6 +704,16 @@ class Customer(Base):
         request = Request(api_secret, api_main)
         return _as_object(request.send('get', ('customers', customer_id)))
 
+    def reload(self):
+        """Reload the customer details.
+
+        :rtype: Customer
+        """
+        request = Request(api_secret, api_main)
+        return self._reload_data(
+            request.send('get',
+                         ('customers', self._attributes['id'])))
+
     def update(self, **kwargs):
         """Update the customer details with the given arguments.
 
@@ -787,6 +827,16 @@ class Transfer(Base):
             return _as_object(request.send('get', ('transfers', transfer_id)))
         return _as_object(request.send('get', 'transfers'))
 
+    def reload(self):
+        """Reload the transfer details.
+
+        :rtype: Transfer
+        """
+        request = Request(api_secret, api_main)
+        return self._reload_data(
+            request.send('get',
+                         ('transfers', self._attributes['id'])))
+
     def update(self, **kwargs):
         """Update the transfers details with the given arguments.
 
@@ -882,3 +932,12 @@ class Transaction(Base):
             return _as_object(request.send(
                 'get', ('transactions', transaction_id)))
         return _as_object(request.send('get', 'transactions'))
+
+    def reload(self):
+        """Reload the transaction details.
+
+        :rtype: Transaction
+        """
+        request = Request(api_secret, api_main)
+        return self._reload_data(
+            request.send('get', ('transactions', self._attributes['id'])))

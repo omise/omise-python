@@ -169,20 +169,6 @@ class AccountTest(_ResourceMixin):
         self.assertEqual(account.created, '2014-10-20T08:21:42Z')
         self.assertRequest(api_call, 'https://api.omise.co/account')
 
-    @mock.patch('requests.get')
-    def test_reload(self, api_call):
-        class_ = self._getTargetClass()
-        self.mockResponse(api_call, """{
-            "object": "account",
-            "id": "acct_test",
-            "email": null,
-            "created": "2014-10-20T08:21:42Z"
-        }""")
-
-        account = class_.retrieve()
-        self.assertEqual(account.id, 'acct_test')
-        self.assertRequest(api_call, 'https://api.omise.co/account')
-
         self.mockResponse(api_call, """{
             "object": "account",
             "id": "acct_foo",
@@ -217,21 +203,6 @@ class BalanceTest(_ResourceMixin):
         self.assertEqual(balance.available, 0)
         self.assertEqual(balance.currency, 'thb')
         self.assertEqual(balance.total, 0)
-        self.assertRequest(api_call, 'https://api.omise.co/balance')
-
-    @mock.patch('requests.get')
-    def test_reload(self, api_call):
-        class_ = self._getTargetClass()
-        self.mockResponse(api_call, """{
-            "object": "balance",
-            "livemode": false,
-            "available": 0,
-            "total": 0,
-            "currency": "thb"
-        }""")
-
-        balance = class_.retrieve()
-        self.assertEqual(balance.available, 0)
         self.assertRequest(api_call, 'https://api.omise.co/balance')
 
         self.mockResponse(api_call, """{
@@ -343,11 +314,41 @@ class TokenTest(_ResourceMixin):
         token = class_.retrieve('tokn_test')
         self.assertTrue(isinstance(token, class_))
         self.assertTrue(isinstance(token.card, card_class_))
+        self.assertFalse(token.used)
         self.assertEqual(token.id, 'tokn_test')
         self.assertEqual(token.card.id, 'card_test')
         self.assertEqual(token.card.last_digits, '4242')
         self.assertRequest(api_call, 'https://vault.omise.co/tokens/tokn_test')
 
+        self.mockResponse(api_call, """{
+            "object": "token",
+            "id": "tokn_test",
+            "livemode": false,
+            "location": "/tokens/tokn_test",
+            "used": true,
+            "card": {
+                "object": "card",
+                "id": "card_test",
+                "livemode": false,
+                "country": "th",
+                "city": "Bangkok",
+                "postal_code": "10320",
+                "financing": "credit",
+                "last_digits": "4242",
+                "brand": "Visa",
+                "expiration_month": 10,
+                "expiration_year": 2018,
+                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                "name": "Somchai Prasert",
+                "created": "2014-10-20T09:41:56Z"
+            },
+            "created": "2014-10-20T09:41:56Z"
+        }""")
+
+        token.reload()
+        self.assertEqual(token.id, 'tokn_test')
+        self.assertTrue(token.used)
+        self.assertRequest(api_call, 'https://api.omise.co/tokens/tokn_test')
 
 class CardTest(_ResourceMixin):
 
@@ -373,6 +374,41 @@ class CardTest(_ResourceMixin):
             'id': 'card_test',
             'name': 'Somchai Prasert'
         })
+
+    @mock.patch('requests.get')
+    def test_reload(self, api_call):
+        card = self._makeOne()
+        class_ = self._getTargetClass()
+
+        self.assertTrue(isinstance(card, class_))
+        self.assertEqual(card.id, 'card_test')
+        self.assertEqual(card.name, 'Somchai Prasert')
+
+        self.mockResponse(api_call, """{
+            "object": "card",
+            "id": "card_test",
+            "livemode": false,
+            "location": "/customers/cust_test/cards/card_test",
+            "country": "",
+            "city": "Bangkok",
+            "postal_code": "10310",
+            "financing": "",
+            "last_digits": "4242",
+            "brand": "Visa",
+            "expiration_month": 12,
+            "expiration_year": 2018,
+            "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+            "name": "S. Prasert",
+            "created": "2014-10-21T04:04:12Z"
+        }""")
+
+        card.reload()
+        self.assertEqual(card.id, 'card_test')
+        self.assertEqual(card.name, 'S. Prasert')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/customers/cust_test/cards/card_test'
+        )
 
     @mock.patch('requests.patch')
     def test_update(self, api_call):
@@ -610,6 +646,47 @@ class ChargeTest(_ResourceMixin):
         self.assertEqual(charge.ip, '127.0.0.1')
         self.assertEqual(charge.card.id, 'card_test')
         self.assertEqual(charge.card.last_digits, '4242')
+        self.assertRequest(api_call, 'https://api.omise.co/charges/chrg_test')
+
+        self.mockResponse(api_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "location": "/charges/chrg_test",
+            "amount": 120000,
+            "currency": "thb",
+            "description": "Order-384",
+            "capture": false,
+            "authorized": true,
+            "captured": false,
+            "transaction": null,
+            "return_uri": "https://www.example.com/",
+            "reference": "9qt1b3n635uv6plypp2spzkpe",
+            "authorize_uri": "https://www.example.com/payments/test/authorize",
+            "card": {
+                "object": "card",
+                "id": "card_test",
+                "livemode": false,
+                "country": "th",
+                "city": "Bangkok",
+                "postal_code": "10320",
+                "financing": "credit",
+                "last_digits": "4242",
+                "brand": "Visa",
+                "expiration_month": 10,
+                "expiration_year": 2018,
+                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                "name": "Somchai Prasert",
+                "created": "2014-10-20T09:41:56Z"
+            },
+            "customer": null,
+            "ip": "127.0.0.1",
+            "created": "2014-10-21T11:12:28Z"
+        }""")
+
+        charge.reload()
+        self.assertEqual(charge.amount, 120000)
+        self.assertEqual(charge.currency, 'thb')
         self.assertRequest(api_call, 'https://api.omise.co/charges/chrg_test')
 
     @mock.patch('requests.patch')
@@ -959,6 +1036,49 @@ class CustomerTest(_ResourceMixin):
         self.assertEqual(customer.cards[0].last_digits, '4242')
         self.assertRequest(api_call, 'https://api.omise.co/customers/cust_test')
 
+        self.mockResponse(api_call, """{
+            "object": "customer",
+            "id": "cust_test",
+            "livemode": false,
+            "location": "/customers/cust_test",
+            "default_card": "card_test",
+            "email": "john.smith@example.com",
+            "description": "John Doe (id: 30)",
+            "created": "2014-10-24T08:26:46Z",
+            "cards": {
+                "object": "list",
+                "from": "1970-01-01T07:00:00+07:00",
+                "to": "2014-10-24T15:32:31+07:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 1,
+                "data": [
+                    {
+                        "object": "card",
+                        "id": "card_test",
+                        "livemode": false,
+                        "location": "/customers/cust_test/cards/card_test",
+                        "country": "",
+                        "city": null,
+                        "postal_code": null,
+                        "financing": "",
+                        "last_digits": "4242",
+                        "brand": "Visa",
+                        "expiration_month": 9,
+                        "expiration_year": 2017,
+                        "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                        "name": "Test card",
+                        "created": "2014-10-24T08:26:07Z"
+                    }
+                ],
+                "location": "/customers/cust_test/cards"
+            }
+        }""")
+
+        customer.reload()
+        self.assertEqual(customer.email, 'john.smith@example.com')
+        self.assertRequest(api_call, 'https://api.omise.co/customers/cust_test')
+
     @mock.patch('requests.patch')
     def test_update(self, api_call):
         customer = self._makeOne()
@@ -1115,10 +1235,32 @@ class TransferTest(_ResourceMixin):
 
         transfer = class_.retrieve('trsf_test')
         self.assertTrue(isinstance(transfer, class_))
+        self.assertFalse(transfer.sent)
+        self.assertFalse(transfer.paid)
         self.assertEqual(transfer.id, 'trsf_test')
         self.assertEqual(transfer.amount, 100000)
         self.assertEqual(transfer.transaction, None)
         self.assertRequest(api_call, 'https://api.omise.co/transfers/trsf_test')
+
+        self.mockResponse(api_call, """{
+            "object": "transfer",
+            "id": "trsf_test",
+            "livemode": false,
+            "location": "/transfers/trsf_test",
+            "sent": true,
+            "paid": true,
+            "amount": 100000,
+            "currency": "thb",
+            "failure_code": null,
+            "failure_message": null,
+            "transaction": null,
+            "created": "2014-11-18T11:31:26Z"
+        }
+        """)
+
+        transfer.reload()
+        self.assertTrue(transfer.sent)
+        self.assertTrue(transfer.paid)
 
     @mock.patch('requests.get')
     def test_retrieve_no_args(self, api_call):
@@ -1236,6 +1378,26 @@ class TransactionTest(_ResourceMixin):
         self.assertTrue(isinstance(transaction, class_))
         self.assertEqual(transaction.id, 'trxn_test')
         self.assertEqual(transaction.type, 'credit')
+        self.assertEqual(transaction.amount, 9635024)
+        self.assertEqual(transaction.currency, 'thb')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/transactions/trxn_test'
+        )
+
+        transaction.amount = 9635023
+        self.assertEqual(transaction.amount, 9635023)
+        self.mockResponse(api_call, """{
+            "object": "transaction",
+            "id": "trxn_test",
+            "type": "credit",
+            "amount": 9635024,
+            "currency": "thb",
+            "created": "2014-10-27T06:58:56Z"
+        }
+        """)
+
+        transaction.reload()
         self.assertEqual(transaction.amount, 9635024)
         self.assertEqual(transaction.currency, 'thb')
         self.assertRequest(
