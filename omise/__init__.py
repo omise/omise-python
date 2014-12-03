@@ -252,6 +252,14 @@ class Base(object):
         instance._reload_data(data)
         return instance
 
+    @classmethod
+    def _collection_path(cls):
+        return NotImplementedError
+
+    @classmethod
+    def _instance_path(cls, *args):
+        raise NotImplementedError
+
     def _reload_data(self, data):
         self._attributes = dict()
         for k, v in iteritems(data):
@@ -290,13 +298,17 @@ class Account(Base):
     """
 
     @classmethod
+    def _instance_path(cls, *args):
+        return 'account'
+
+    @classmethod
     def retrieve(cls):
         """Retrieve the account details associated with the API key.
 
         :rtype: Account
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('get', 'account'))
+        return _as_object(request.send('get', cls._instance_path()))
 
     def reload(self):
         """Reload the account details.
@@ -304,7 +316,7 @@ class Account(Base):
         :rtype: Account
         """
         request = Request(api_secret, api_main)
-        return self._reload_data(request.send('get', 'account'))
+        return self._reload_data(request.send('get', self._instance_path()))
 
 
 class Balance(Base):
@@ -324,13 +336,17 @@ class Balance(Base):
     """
 
     @classmethod
+    def _instance_path(cls, *args):
+        return 'balance'
+
+    @classmethod
     def retrieve(cls):
         """Retrieve the balance details for current account.
 
         :rtype: Balance
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('get', 'balance'))
+        return _as_object(request.send('get', cls._instance_path()))
 
     def reload(self):
         """Reload the balance details.
@@ -338,7 +354,7 @@ class Balance(Base):
         :rtype: Balance
         """
         request = Request(api_secret, api_main)
-        return self._reload_data(request.send('get', 'balance'))
+        return self._reload_data(request.send('get', self._instance_path()))
 
 
 class Token(Base):
@@ -361,6 +377,14 @@ class Token(Base):
         >>> token.used
         False
     """
+
+    @classmethod
+    def _collection_path(cls):
+        return 'tokens'
+
+    @classmethod
+    def _instance_path(cls, token_id):
+        return ('tokens', token_id)
 
     @classmethod
     def create(cls, **kwargs):
@@ -398,7 +422,10 @@ class Token(Base):
         transformed_args = {}
         for key, value in iteritems(kwargs):
             transformed_args['card[%s]' % key] = value
-        return _as_object(request.send('post', 'tokens', transformed_args))
+        return _as_object(
+            request.send('post',
+                         cls._collection_path(),
+                         transformed_args))
 
     @classmethod
     def retrieve(cls, token_id):
@@ -409,7 +436,7 @@ class Token(Base):
         :rtype: Token
         """
         request = Request(api_public, api_vault)
-        return _as_object(request.send('get', ('tokens', token_id)))
+        return _as_object(request.send('get', cls._instance_path(token_id)))
 
     def reload(self):
         """Reload the token details.
@@ -419,7 +446,7 @@ class Token(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('get',
-                         ('tokens', self._attributes['id'])))
+                         self._instance_path(self._attributes['id'])))
 
 
 class Card(Base):
@@ -532,6 +559,14 @@ class Charge(Base):
     """
 
     @classmethod
+    def _collection_path(cls):
+        return 'charges'
+
+    @classmethod
+    def _instance_path(cls, charge_id):
+        return ('charges', charge_id)
+
+    @classmethod
     def create(cls, **kwargs):
         """Create a charge to the given card details.
 
@@ -557,7 +592,10 @@ class Charge(Base):
         :rtype: Charge
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('post', 'charges', kwargs))
+        return _as_object(
+            request.send('post',
+                         cls._collection_path(),
+                         kwargs))
 
     @classmethod
     def retrieve(cls, charge_id=None):
@@ -569,8 +607,10 @@ class Charge(Base):
         """
         request = Request(api_secret, api_main)
         if charge_id:
-            return _as_object(request.send('get', ('charges', charge_id)))
-        return _as_object(request.send('get', 'charges'))
+            return _as_object(
+                request.send('get',
+                             cls._instance_path(charge_id)))
+        return _as_object(request.send('get', cls._collection_path()))
 
     def reload(self):
         """Reload the charge details.
@@ -580,7 +620,7 @@ class Charge(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('get',
-                         ('charges', self._attributes['id'])))
+                         self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the charge details with the given arguments.
@@ -606,7 +646,7 @@ class Charge(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('patch',
-                         ('charges', self.id),
+                         self._instance_path(self._attributes['id']),
                          changed))
 
     def capture(self):
@@ -615,9 +655,8 @@ class Charge(Base):
         :rtype: Charge
         """
         request = Request(api_secret, api_main)
-        return self._reload_data(
-            request.send('post',
-                         ('charges', self.id, 'capture')))
+        path = self._instance_path(self._attributes['id']) + ('capture',)
+        return self._reload_data(request.send('post', path))
 
 
 class Collection(Base):
@@ -669,6 +708,14 @@ class Customer(Base):
     """
 
     @classmethod
+    def _collection_path(cls):
+        return 'customers'
+
+    @classmethod
+    def _instance_path(cls, customer_id):
+        return ('customers', customer_id)
+
+    @classmethod
     def create(cls, **kwargs):
         """Create a customer with the given card token.
 
@@ -693,7 +740,10 @@ class Customer(Base):
         :rtype: Customer
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('post', 'customers', kwargs))
+        return _as_object(
+            request.send('post',
+                         cls._collection_path(),
+                         kwargs))
 
     @classmethod
     def retrieve(cls, customer_id):
@@ -704,7 +754,7 @@ class Customer(Base):
         :rtype: Customer
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('get', ('customers', customer_id)))
+        return _as_object(request.send('get', cls._instance_path(customer_id)))
 
     def reload(self):
         """Reload the customer details.
@@ -714,7 +764,7 @@ class Customer(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('get',
-                         ('customers', self._attributes['id'])))
+                         self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the customer details with the given arguments.
@@ -744,7 +794,7 @@ class Customer(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('patch',
-                         ('customers', self.id),
+                         self._instance_path(self._attributes['id']),
                          changed))
 
     def destroy(self):
@@ -763,7 +813,9 @@ class Customer(Base):
         :rtype: Customer
         """
         request = Request(api_secret, api_main)
-        return self._reload_data(request.send('delete', ('customers', self.id)))
+        return self._reload_data(
+            request.send('delete',
+                         self._instance_path(self._attributes['id'])))
 
     @property
     def destroyed(self):
@@ -792,6 +844,14 @@ class Transfer(Base):
     """
 
     @classmethod
+    def _collection_path(cls):
+        return 'transfers'
+
+    @classmethod
+    def _instance_path(cls, transfer_id):
+        return ('transfers', transfer_id)
+
+    @classmethod
     def create(cls, **kwargs):
         """Create a transfer to the bank account.
 
@@ -812,7 +872,10 @@ class Transfer(Base):
         :rtype: Transfer
         """
         request = Request(api_secret, api_main)
-        return _as_object(request.send('post', 'transfers', kwargs))
+        return _as_object(
+            request.send('post',
+                         cls._collection_path(),
+                         kwargs))
 
     @classmethod
     def retrieve(cls, transfer_id=None):
@@ -826,8 +889,10 @@ class Transfer(Base):
         """
         request = Request(api_secret, api_main)
         if transfer_id:
-            return _as_object(request.send('get', ('transfers', transfer_id)))
-        return _as_object(request.send('get', 'transfers'))
+            return _as_object(
+                request.send('get',
+                             cls._instance_path(transfer_id)))
+        return _as_object(request.send('get', cls._collection_path()))
 
     def reload(self):
         """Reload the transfer details.
@@ -837,7 +902,7 @@ class Transfer(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('get',
-                         ('transfers', self._attributes['id'])))
+                         self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the transfers details with the given arguments.
@@ -868,7 +933,7 @@ class Transfer(Base):
         request = Request(api_secret, api_main)
         return self._reload_data(
             request.send('patch',
-                         ('transfers', self.id),
+                         self._instance_path(self.id),
                          changed))
 
     def destroy(self):
@@ -891,7 +956,9 @@ class Transfer(Base):
         :rtype: Customer
         """
         request = Request(api_secret, api_main)
-        return self._reload_data(request.send('delete', ('transfers', self.id)))
+        return self._reload_data(
+            request.send('delete',
+                         self._instance_path(self.id)))
 
     @property
     def destroyed(self):
@@ -920,6 +987,14 @@ class Transaction(Base):
     """
 
     @classmethod
+    def _collection_path(cls):
+        return 'transactions'
+
+    @classmethod
+    def _instance_path(cls, transaction_id):
+        return ('transactions', transaction_id)
+
+    @classmethod
     def retrieve(cls, transaction_id=None):
         """Retrieve the transaction details for the given
         :param:`transaction_id`. If :param:`transaction_id` is not given, all
@@ -931,9 +1006,10 @@ class Transaction(Base):
         """
         request = Request(api_secret, api_main)
         if transaction_id:
-            return _as_object(request.send(
-                'get', ('transactions', transaction_id)))
-        return _as_object(request.send('get', 'transactions'))
+            return _as_object(
+                request.send('get',
+                             cls._instance_path(transaction_id)))
+        return _as_object(request.send('get', cls._collection_path()))
 
     def reload(self):
         """Reload the transaction details.
@@ -942,4 +1018,5 @@ class Transaction(Base):
         """
         request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get', ('transactions', self._attributes['id'])))
+            request.send('get',
+                         self._instance_path(self._attributes['id'])))
