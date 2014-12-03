@@ -253,6 +253,10 @@ class Base(object):
         return instance
 
     @classmethod
+    def _request(cls):
+        return NotImplementedError
+
+    @classmethod
     def _collection_path(cls):
         return NotImplementedError
 
@@ -280,7 +284,21 @@ class Base(object):
         return dict((c, self._attributes.get(c)) for c in self._changes)
 
 
-class Account(Base):
+class _MainResource(Base):
+
+    @classmethod
+    def _request(cls, *args, **kwargs):
+        return Request(api_secret, api_main).send(*args, **kwargs)
+
+
+class _VaultResource(Base):
+
+    @classmethod
+    def _request(cls, *args, **kwargs):
+        return Request(api_public, api_vault).send(*args, **kwargs)
+
+
+class Account(_MainResource, Base):
     """API class representing accounts details.
 
     This API class is used for retrieving account information such as creator
@@ -307,19 +325,17 @@ class Account(Base):
 
         :rtype: Account
         """
-        request = Request(api_secret, api_main)
-        return _as_object(request.send('get', cls._instance_path()))
+        return _as_object(cls._request('get', cls._instance_path()))
 
     def reload(self):
         """Reload the account details.
 
         :rtype: Account
         """
-        request = Request(api_secret, api_main)
-        return self._reload_data(request.send('get', self._instance_path()))
+        return self._reload_data(self._request('get', self._instance_path()))
 
 
-class Balance(Base):
+class Balance(_MainResource, Base):
     """API class representing balance details.
 
     This API class is used for retrieving current balance of the account.
@@ -345,19 +361,17 @@ class Balance(Base):
 
         :rtype: Balance
         """
-        request = Request(api_secret, api_main)
-        return _as_object(request.send('get', cls._instance_path()))
+        return _as_object(cls._request('get', cls._instance_path()))
 
     def reload(self):
         """Reload the balance details.
 
         :rtype: Balance
         """
-        request = Request(api_secret, api_main)
-        return self._reload_data(request.send('get', self._instance_path()))
+        return self._reload_data(self._request('get', self._instance_path()))
 
 
-class Token(Base):
+class Token(_VaultResource, Base):
     """API class for creating and retrieving credit card token with the API.
 
     Credit card tokens are a unique ID that represents a card that could
@@ -418,12 +432,11 @@ class Token(Base):
         :param \*\*kwargs: arguments to create a token.
         :rtype: Token
         """
-        request = Request(api_public, api_vault)
         transformed_args = {}
         for key, value in iteritems(kwargs):
             transformed_args['card[%s]' % key] = value
         return _as_object(
-            request.send('post',
+            cls._request('post',
                          cls._collection_path(),
                          transformed_args))
 
@@ -435,21 +448,19 @@ class Token(Base):
         :type token_id: str
         :rtype: Token
         """
-        request = Request(api_public, api_vault)
-        return _as_object(request.send('get', cls._instance_path(token_id)))
+        return _as_object(cls._request('get', cls._instance_path(token_id)))
 
     def reload(self):
         """Reload the token details.
 
         :rtype: Token
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get',
-                         self._instance_path(self._attributes['id'])))
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
 
 
-class Card(Base):
+class Card(_MainResource, Base):
     """API class representing card details.
 
     This API class represents a card information returned from other APIs.
@@ -472,10 +483,9 @@ class Card(Base):
 
         :rtype: Card
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get',
-                         self._attributes['location']))
+            self._request('get',
+                          self._attributes['location']))
 
     def update(self, **kwargs):
         """Update the card information with the given card details.
@@ -504,11 +514,10 @@ class Card(Base):
         """
         changed = copy.deepcopy(self.changes)
         changed.update(kwargs)
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('patch',
-                         self._attributes['location'],
-                         changed))
+            self._request('patch',
+                          self._attributes['location'],
+                          changed))
 
     def destroy(self):
         """Delete the card and unassociated it from the customer.
@@ -526,10 +535,9 @@ class Card(Base):
 
         :rtype: Card
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('delete',
-                         self._attributes['location']))
+            self._request('delete',
+                          self._attributes['location']))
 
     @property
     def destroyed(self):
@@ -540,7 +548,7 @@ class Card(Base):
         return self._attributes.get('deleted', False)
 
 
-class Charge(Base):
+class Charge(_MainResource, Base):
     """API class representing a charge.
 
     This API class is used for retrieving and creating a charge to the
@@ -591,9 +599,8 @@ class Charge(Base):
         :param \*\*kwargs: arguments to create a charge.
         :rtype: Charge
         """
-        request = Request(api_secret, api_main)
         return _as_object(
-            request.send('post',
+            cls._request('post',
                          cls._collection_path(),
                          kwargs))
 
@@ -605,22 +612,20 @@ class Charge(Base):
         :type charge_id: str
         :rtype: Charge
         """
-        request = Request(api_secret, api_main)
         if charge_id:
             return _as_object(
-                request.send('get',
+                cls._request('get',
                              cls._instance_path(charge_id)))
-        return _as_object(request.send('get', cls._collection_path()))
+        return _as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):
         """Reload the charge details.
 
         :rtype: Charge
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get',
-                         self._instance_path(self._attributes['id'])))
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the charge details with the given arguments.
@@ -643,20 +648,18 @@ class Charge(Base):
         """
         changed = copy.deepcopy(self.changes)
         changed.update(kwargs)
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('patch',
-                         self._instance_path(self._attributes['id']),
-                         changed))
+            self._request('patch',
+                          self._instance_path(self._attributes['id']),
+                          changed))
 
     def capture(self):
         """Capture an authorized charge.
 
         :rtype: Charge
         """
-        request = Request(api_secret, api_main)
         path = self._instance_path(self._attributes['id']) + ('capture',)
-        return self._reload_data(request.send('post', path))
+        return self._reload_data(self._request('post', path))
 
 
 class Collection(Base):
@@ -690,7 +693,7 @@ class Collection(Base):
                     return _as_object(obj)
 
 
-class Customer(Base):
+class Customer(_MainResource, Base):
     """API class representing a customer in an account.
 
     This API class is used for retrieving and creating a customer in an
@@ -739,9 +742,8 @@ class Customer(Base):
         :param \*\*kwargs: arguments to create a customer.
         :rtype: Customer
         """
-        request = Request(api_secret, api_main)
         return _as_object(
-            request.send('post',
+            cls._request('post',
                          cls._collection_path(),
                          kwargs))
 
@@ -753,18 +755,16 @@ class Customer(Base):
         :type customer_id: str
         :rtype: Customer
         """
-        request = Request(api_secret, api_main)
-        return _as_object(request.send('get', cls._instance_path(customer_id)))
+        return _as_object(cls._request('get', cls._instance_path(customer_id)))
 
     def reload(self):
         """Reload the customer details.
 
         :rtype: Customer
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get',
-                         self._instance_path(self._attributes['id'])))
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the customer details with the given arguments.
@@ -791,11 +791,10 @@ class Customer(Base):
         """
         changed = copy.deepcopy(self.changes)
         changed.update(kwargs)
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('patch',
-                         self._instance_path(self._attributes['id']),
-                         changed))
+            self._request('patch',
+                          self._instance_path(self._attributes['id']),
+                          changed))
 
     def destroy(self):
         """Delete the customer from the server.
@@ -812,10 +811,9 @@ class Customer(Base):
 
         :rtype: Customer
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('delete',
-                         self._instance_path(self._attributes['id'])))
+            self._request('delete',
+                          self._instance_path(self._attributes['id'])))
 
     @property
     def destroyed(self):
@@ -826,7 +824,7 @@ class Customer(Base):
         return self._attributes.get('deleted', False)
 
 
-class Transfer(Base):
+class Transfer(_MainResource, Base):
     """API class representing a transfer.
 
     This API class is used for retrieving a transfer information and create
@@ -871,9 +869,8 @@ class Transfer(Base):
         :param \*\*kwargs: arguments to create a transfer.
         :rtype: Transfer
         """
-        request = Request(api_secret, api_main)
         return _as_object(
-            request.send('post',
+            cls._request('post',
                          cls._collection_path(),
                          kwargs))
 
@@ -887,22 +884,20 @@ class Transfer(Base):
         :type transfer_id: str
         :rtype: Transfer
         """
-        request = Request(api_secret, api_main)
         if transfer_id:
             return _as_object(
-                request.send('get',
+                cls._request('get',
                              cls._instance_path(transfer_id)))
-        return _as_object(request.send('get', cls._collection_path()))
+        return _as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):
         """Reload the transfer details.
 
         :rtype: Transfer
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get',
-                         self._instance_path(self._attributes['id'])))
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
         """Update the transfers details with the given arguments.
@@ -930,11 +925,10 @@ class Transfer(Base):
         """
         changed = copy.deepcopy(self.changes)
         changed.update(kwargs)
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('patch',
-                         self._instance_path(self.id),
-                         changed))
+            self._request('patch',
+                          self._instance_path(self.id),
+                          changed))
 
     def destroy(self):
         """Delete the transfer from the server if it is not yet sent.
@@ -955,10 +949,9 @@ class Transfer(Base):
 
         :rtype: Customer
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('delete',
-                         self._instance_path(self.id)))
+            self._request('delete',
+                          self._instance_path(self.id)))
 
     @property
     def destroyed(self):
@@ -969,7 +962,7 @@ class Transfer(Base):
         return self._attributes.get('deleted', False)
 
 
-class Transaction(Base):
+class Transaction(_MainResource, Base):
     """API class representing a transaction.
 
     This API class is used for retrieving a transaction information for
@@ -1004,19 +997,17 @@ class Transaction(Base):
         :type transaction_id: str
         :rtype: Transaction
         """
-        request = Request(api_secret, api_main)
         if transaction_id:
             return _as_object(
-                request.send('get',
+                cls._request('get',
                              cls._instance_path(transaction_id)))
-        return _as_object(request.send('get', cls._collection_path()))
+        return _as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):
         """Reload the transaction details.
 
         :rtype: Transaction
         """
-        request = Request(api_secret, api_main)
         return self._reload_data(
-            request.send('get',
-                         self._instance_path(self._attributes['id'])))
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))

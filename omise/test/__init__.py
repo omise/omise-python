@@ -348,7 +348,7 @@ class TokenTest(_ResourceMixin):
         token.reload()
         self.assertEqual(token.id, 'tokn_test')
         self.assertTrue(token.used)
-        self.assertRequest(api_call, 'https://api.omise.co/tokens/tokn_test')
+        self.assertRequest(api_call, 'https://vault.omise.co/tokens/tokn_test')
 
 class CardTest(_ResourceMixin):
 
