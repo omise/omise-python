@@ -40,7 +40,7 @@ Then to retrieve, update and destroy that customer:
 
 ```python
 >>> customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
->>> customer.description('John W. Doe')
+>>> customer.description = 'John W. Doe'
 >>> customer.update()
 <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
 >>> customer.destroy()
