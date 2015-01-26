@@ -1,5 +1,7 @@
 # Omise Python Client
 
+[![Build Status](https://travis-ci.org/omise/omise-python.svg?branch=master)](https://travis-ci.org/omise/omise-python)
+
 ## Installation
 
 The Omise Python client is not yet available in [PyPI](https://pypi.python.org/) at the moment. This means you have to use [Pip](https://pip.pypa.io/en/latest/) to install the package until we made the package available in PyPI:
