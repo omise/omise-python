@@ -511,16 +511,26 @@ class ChargeTest(_ResourceMixin):
             'capture': False,
             'object': 'charge',
             'description': 'Order-384',
-            'reference': '9qt1b3n635uv6plypp2spzkpe',
             'created': '2014-10-21T11:12:28Z',
             'ip': '127.0.0.1',
             'livemode': False,
-            'authorize_uri': 'https://www.example.com/payments/test/authorize',
             'currency': 'thb',
             'amount': 100000,
             'transaction': None,
+            'refunded': 0,
+            'refunds': {
+                'object': 'list',
+                'from': '1970-01-01T00:00:00+00:00',
+                'to': '2015-01-26T16:20:43+00:00',
+                'offset': 0,
+                'limit': 20,
+                'total': 0,
+                'data': [],
+                'location': '/charges/chrg_test/refunds',
+            },
+            'failure_code': None,
+            'failure_message': None,
             'location': '/charges/chrg_test',
-            'return_uri': 'https://www.example.com/',
             'customer': None,
             'id': 'chrg_test',
             'captured': False,
@@ -543,9 +553,19 @@ class ChargeTest(_ResourceMixin):
             "authorized": false,
             "captured": false,
             "transaction": null,
-            "return_uri": "https://www.example.com/",
-            "reference": "9qt1b3n635uv6plypp2spzkpe",
-            "authorize_uri": "https://www.example.com/payments/test/authorize",
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "failure_code": null,
+            "failure_message": null,
             "card": {
                 "object": "card",
                 "id": "card_test",
@@ -568,7 +588,6 @@ class ChargeTest(_ResourceMixin):
         }""")
 
         charge = class_.create(
-            return_uri='https://www.example.com/',
             amount=100000,
             currency='thb',
             description='Order-384',
@@ -579,7 +598,6 @@ class ChargeTest(_ResourceMixin):
         self.assertTrue(isinstance(charge, class_))
         self.assertTrue(isinstance(charge.card, card_class_))
         self.assertEqual(charge.id, 'chrg_test')
-        self.assertEqual(charge.return_uri, 'https://www.example.com/')
         self.assertEqual(charge.amount, 100000)
         self.assertEqual(charge.currency, 'thb')
         self.assertEqual(charge.description, 'Order-384')
@@ -590,7 +608,6 @@ class ChargeTest(_ResourceMixin):
             api_call,
             'https://api.omise.co/charges',
             {
-                'return_uri': 'https://www.example.com/',
                 'amount': 100000,
                 'currency': 'thb',
                 'description': 'Order-384',
@@ -615,9 +632,19 @@ class ChargeTest(_ResourceMixin):
             "authorized": true,
             "captured": false,
             "transaction": null,
-            "return_uri": "https://www.example.com/",
-            "reference": "9qt1b3n635uv6plypp2spzkpe",
-            "authorize_uri": "https://www.example.com/payments/test/authorize",
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "failure_code": null,
+            "failure_message": null,
             "card": {
                 "object": "card",
                 "id": "card_test",
@@ -643,7 +670,6 @@ class ChargeTest(_ResourceMixin):
         self.assertTrue(isinstance(charge, class_))
         self.assertTrue(isinstance(charge.card, card_class_))
         self.assertEqual(charge.id, 'chrg_test')
-        self.assertEqual(charge.return_uri, 'https://www.example.com/')
         self.assertEqual(charge.amount, 100000)
         self.assertEqual(charge.currency, 'thb')
         self.assertEqual(charge.description, 'Order-384')
@@ -664,9 +690,19 @@ class ChargeTest(_ResourceMixin):
             "authorized": true,
             "captured": false,
             "transaction": null,
-            "return_uri": "https://www.example.com/",
-            "reference": "9qt1b3n635uv6plypp2spzkpe",
-            "authorize_uri": "https://www.example.com/payments/test/authorize",
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "failure_code": null,
+            "failure_message": null,
             "card": {
                 "object": "card",
                 "id": "card_test",
@@ -719,6 +755,17 @@ class ChargeTest(_ResourceMixin):
                     "transaction": null,
                     "failure_code": null,
                     "failure_message": null,
+                    "refunded": 0,
+                    "refunds": {
+                        "object": "list",
+                        "from": "1970-01-01T00:00:00+00:00",
+                        "to": "2015-01-26T16:20:43+00:00",
+                        "offset": 0,
+                        "limit": 20,
+                        "total": 0,
+                        "data": [],
+                        "location": "/charges/chrg_test_1/refunds"
+                    },
                     "card": {
                         "object": "card",
                         "id": "card_test_1",
@@ -755,6 +802,17 @@ class ChargeTest(_ResourceMixin):
                     "transaction": null,
                     "failure_code": null,
                     "failure_message": null,
+                    "refunded": 0,
+                    "refunds": {
+                        "object": "list",
+                        "from": "1970-01-01T00:00:00+00:00",
+                        "to": "2015-01-26T16:20:43+00:00",
+                        "offset": 0,
+                        "limit": 20,
+                        "total": 0,
+                        "data": [],
+                        "location": "/charges/chrg_test_2/refunds"
+                    },
                     "card": {
                         "object": "card",
                         "id": "card_test_2",
@@ -805,9 +863,19 @@ class ChargeTest(_ResourceMixin):
             "authorized": true,
             "captured": false,
             "transaction": null,
-            "return_uri": "https://www.example.com/",
-            "reference": "9qt1b3n635uv6plypp2spzkpe",
-            "authorize_uri": "https://www.example.com/payments/test/authorize",
+            "failure_code": null,
+            "failure_message": null,
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
             "card": {
                 "object": "card",
                 "id": "card_test",
@@ -857,9 +925,19 @@ class ChargeTest(_ResourceMixin):
             "authorized": true,
             "captured": true,
             "transaction": null,
-            "return_uri": "https://www.example.com/",
-            "reference": "9qt1b3n635uv6plypp2spzkpe",
-            "authorize_uri": "https://www.example.com/payments/test/authorize",
+            "failure_code": null,
+            "failure_message": null,
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
             "card": {
                 "object": "card",
                 "id": "card_test",
@@ -889,6 +967,91 @@ class ChargeTest(_ResourceMixin):
         self.assertRequest(
             api_call,
             'https://api.omise.co/charges/chrg_test/capture',
+        )
+
+    @mock.patch('requests.get')
+    @mock.patch('requests.post')
+    def test_refund(self, api_call, reload_call):
+        charge = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "refund",
+            "id": "rfnd_test",
+            "location": "/charges/chrg_test/refunds/rfnd_test",
+            "amount": 10000,
+            "currency": "thb",
+            "charge": "chrg_test",
+            "transaction": null,
+            "created": "2015-01-26T16:17:26Z"
+        }""")
+
+        self.mockResponse(reload_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "location": "/charges/chrg_test",
+            "amount": 100000,
+            "currency": "thb",
+            "description": "New description",
+            "capture": true,
+            "authorized": true,
+            "captured": true,
+            "transaction": null,
+            "failure_code": null,
+            "failure_message": null,
+            "refunded": 10000,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 1,
+                "data": [
+                    {
+                        "object": "refund",
+                        "id": "rfnd_test_1",
+                        "location": "/charges/chrg_test/refunds/rfnd_test_1",
+                        "amount": 10000,
+                        "currency": "thb",
+                        "charge": "chrg_test",
+                        "transaction": null,
+                        "created": "2015-01-26T15:06:16Z"
+                    }
+                ],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "card": {
+                "object": "card",
+                "id": "card_test",
+                "livemode": false,
+                "country": "th",
+                "city": "Bangkok",
+                "postal_code": "10320",
+                "financing": "credit",
+                "last_digits": "4242",
+                "brand": "Visa",
+                "expiration_month": 10,
+                "expiration_year": 2018,
+                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                "name": "Somchai Prasert",
+                "created": "2014-10-20T09:41:56Z"
+            },
+            "customer": null,
+            "ip": "127.0.0.1",
+            "created": "2014-10-21T11:12:28Z"
+        }""")
+
+        self.assertTrue(isinstance(charge, class_))
+
+        refund = charge.refund(amount=10000)
+        self.assertEqual(refund.amount, 10000)
+        self.assertEqual(charge.refunded, 10000)
+
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges/chrg_test/refunds',
+            {'amount': 10000}
         )
 
 
@@ -1258,6 +1421,51 @@ class CustomerTest(_ResourceMixin):
         customer.destroy()
         self.assertTrue(customer.destroyed)
         self.assertRequest(api_call, 'https://api.omise.co/customers/cust_test')
+
+
+class RefundTest(_ResourceMixin):
+
+    def _getTargetClass(self):
+        from .. import Refund
+        return Refund
+
+    def _makeOne(self):
+        return self._getTargetClass().from_data({
+            'object': 'refund',
+            'id': 'rfnd_test',
+            'location': '/charges/chrg_test/refunds/rfnd_test',
+            'amount': 10000,
+            'currency': 'thb',
+            'charge': 'chrg_test',
+            'transaction': None,
+            'created': '2015-01-26T15:06:16Z'
+        })
+
+    @mock.patch('requests.get')
+    def test_reload(self, api_call):
+        refund = self._makeOne()
+        class_ = self._getTargetClass()
+
+        self.assertTrue(isinstance(refund, class_))
+        self.assertEqual(refund.transaction, None)
+
+        self.mockResponse(api_call, """{
+            "object": "refund",
+            "id": "rfnd_test",
+            "location": "/charges/chrg_test/refunds/rfnd_test",
+            "amount": 10000,
+            "currency": "thb",
+            "charge": "chrg_test",
+            "transaction": "trxn_test",
+            "created": "2015-01-26T15:06:16Z"
+        }""")
+
+        refund.reload()
+        self.assertEqual(refund.transaction, 'trxn_test')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges/chrg_test/refunds/rfnd_test'
+        )
 
 
 class TransferTest(_ResourceMixin):

@@ -8,6 +8,7 @@ __all__ = [
     'InvalidChargeError',
     'FailedCaptureError',
     'FailedFraudCheckError',
+    'FailedRefundError',
 ]
 
 
@@ -29,6 +30,7 @@ def _get_error_for(type):
         'invalid_charge': InvalidChargeError,
         'failed_capture': FailedCaptureError,
         'failed_fraud_check': FailedFraudCheckError,
+        'failed_refund': FailedRefundError,
     }.get(type)
 
 
@@ -83,4 +85,8 @@ class FailedCaptureError(BaseError):
 
 
 class FailedFraudCheckError(BaseError):
+    pass
+
+
+class FailedRefundError(BaseError):
     pass

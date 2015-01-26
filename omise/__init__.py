@@ -49,6 +49,7 @@ __all__ = [
     'Charge',
     'Collection',
     'Customer',
+    'Refund',
     'Token',
     'Transaction',
     'Transfer',
@@ -72,6 +73,7 @@ def _get_class_for(type):
         'card': Card,
         'charge': Charge,
         'customer': Customer,
+        'refund': Refund,
         'transfer': Transfer,
         'transaction': Transaction,
         'list': Collection,
@@ -661,6 +663,21 @@ class Charge(_MainResource, Base):
         path = self._instance_path(self._attributes['id']) + ('capture',)
         return self._reload_data(self._request('post', path))
 
+    def refund(self, **kwargs):
+        """Refund a refundable charge.
+
+        See the `create a refund`_ section in the API documentation for list of
+        available arguments.
+
+        :rtype: Refund
+
+        .. _create a refund: https://docs.omise.co/api/refunds/#create-a-refund
+        """
+        path = self._instance_path(self._attributes['id']) + ('refunds',)
+        refund = _as_object(self._request('post', path, kwargs))
+        self.reload()
+        return refund
+
 
 class Collection(Base):
     """Proxy class representing a collection of items."""
@@ -822,6 +839,34 @@ class Customer(_MainResource, Base):
         :rtype: bool
         """
         return self._attributes.get('deleted', False)
+
+
+class Refund(_MainResource, Base):
+    """API class representing refund information.
+
+    This API class represents a refund information returned from the refund API.
+    Refunds are not created directly with this class, but instead can be created
+    using :meth:`Charge.refund`.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+        >>> charge = omise.Charge.retrieve('chrg_test_4xso2s8ivdej29pqnhz')
+        >>> refund = charge.refunds.retrieve('rfnd_test_4ypcvo03ktuw0uki7un')
+        <Refund id='rfnd_test_4ypcvo03ktuw0uki7un' at 0x7fd6095096f8>
+        >>> refund.amount
+        10000
+    """
+
+    def reload(self):
+        """Reload the refund details.
+
+        :rtype: Refund
+        """
+        return self._reload_data(
+            self._request('get',
+                          self._attributes['location']))
 
 
 class Transfer(_MainResource, Base):
