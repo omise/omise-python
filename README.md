@@ -1,6 +1,8 @@
 # Omise Python Client
 
-[![Build Status](https://travis-ci.org/omise/omise-python.svg?branch=master)](https://travis-ci.org/omise/omise-python)
+[![Build Status](https://travis-ci.org/omise/omise-python.svg?branch=master&style=flat)](https://travis-ci.org/omise/omise-python)
+[![Python Versions](https://pypip.in/py_versions/omise/badge.svg?style=flat)](https://pypi.python.org/pypi/omise/)
+[![PyPi Version](https://pypip.in/version/omise/badge.svg?style=flat)](https://pypi.python.org/pypi/omise/)
 
 ## Installation
 

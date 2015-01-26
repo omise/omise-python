@@ -2,6 +2,7 @@
 *.egg
 *.egg-info
 .vagrant/
+dist/
 
 # Tests
 .coverage
