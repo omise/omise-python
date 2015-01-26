@@ -4,10 +4,16 @@
 
 ## Installation
 
-The Omise Python client is not yet available in [PyPI](https://pypi.python.org/) at the moment. This means you have to use [Pip](https://pip.pypa.io/en/latest/) to install the package until we made the package available in PyPI:
+If you simply want to use Omise Python client in your application, you can install it using [pip](http://www.pip-installer.org/en/latest/index.html):
 
 ```
-pip install git+https://github.com/omise/omise-python.git#egg=omise
+pip install omise
+```
+
+Or `easy_install` in case your system do not have pip installed:
+
+```
+easy_install omise
 ```
 
 The Omise Python client supports the following Python versions:
