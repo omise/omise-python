@@ -1,4 +1,5 @@
 import copy
+import json
 import logging
 import os
 import requests
@@ -182,12 +183,13 @@ class Request(object):
     def _build_payload(self, payload):
         if payload is None:
             payload = {}
-        return payload
+        return json.dumps(payload)
 
     def _build_headers(self, headers):
         if headers is None:
             headers = {}
         headers['Accept'] = 'application/json'
+        headers['Content-Type'] = 'application/json'
         headers['User-Agent'] = 'OmisePython/%s OmiseAPI/%s' % (
             version.__VERSION__,
             api_compat)
