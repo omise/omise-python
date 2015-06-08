@@ -1,5 +1,4 @@
 import copy
-import json
 import logging
 import os
 import requests
@@ -25,6 +24,12 @@ try:
     basestring
 except NameError:
     basestring = str
+
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 
 # Settings
@@ -466,9 +471,7 @@ class Token(_VaultResource, Base):
         :param \*\*kwargs: arguments to create a token.
         :rtype: Token
         """
-        transformed_args = {}
-        for key, value in iteritems(kwargs):
-            transformed_args['card[%s]' % key] = value
+        transformed_args = dict(card=kwargs)
         return _as_object(
             cls._request('post',
                          cls._collection_path(),
@@ -989,6 +992,33 @@ class Recipient(_MainResource, Base):
             self._request('patch',
                           self._instance_path(self._attributes['id']),
                           changed))
+
+    def destroy(self):
+        """Delete the recipient from the server.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+            >>> recp = omise.Recipient.retrieve('recp_test_5086xmr74vxs0ajpo78')
+            >>> recp.destroy()
+            <Recipient id='recp_test_5086xmr74vxs0ajpo78' at 0x7f775ff01c60>
+            >>> recp.destroyed
+            True
+
+        :rtype: Recipient
+        """
+        return self._reload_data(
+            self._request('delete',
+                          self._instance_path(self.id)))
+
+    @property
+    def destroyed(self):
+        """Returns ``True`` if the recipient has been deleted.
+
+        :rtype: bool
+        """
+        return self._attributes.get('deleted', False)
 
 
 class Refund(_MainResource, Base):
