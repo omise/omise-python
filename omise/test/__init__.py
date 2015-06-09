@@ -1111,7 +1111,7 @@ class CollectionTest(_ResourceMixin):
         self.assertEqual(collection.retrieve('acct_test_2').id, 'acct_test_2')
         self.assertEqual(collection.retrieve('acct_test_3').id, 'acct_test_3')
         self.assertEqual(collection.retrieve('acct_test_4').id, 'acct_test_4')
-        self.assertIsNone(collection.retrieve('acct_test_5'))
+        self.assertEqual(collection.retrieve('acct_test_5'), None)
 
     def test_retrieve_no_args(self):
         collection = self._makeOne()
@@ -1473,7 +1473,7 @@ class DisputeTest(_ResourceMixin):
         self.assertEqual(dispute.currency, 'thb')
         self.assertEqual(dispute.status, 'pending')
         self.assertEqual(dispute.charge, 'chrg_test')
-        self.assertIsNone(dispute.message)
+        self.assertEqual(dispute.message, None)
 
         self.assertRequest(
             api_call,
@@ -1581,7 +1581,7 @@ class DisputeTest(_ResourceMixin):
         }""")
 
         self.assertTrue(isinstance(dispute, class_))
-        self.assertIsNone(dispute.message)
+        self.assertEqual(dispute.message, None)
         dispute.message = 'Foobar Baz'
         dispute.update()
 
@@ -1899,7 +1899,7 @@ class RefundTest(_ResourceMixin):
         class_ = self._getTargetClass()
 
         self.assertTrue(isinstance(refund, class_))
-        self.assertIsNone(refund.transaction)
+        self.assertEqual(refund.transaction, None)
 
         self.mockResponse(api_call, """{
             "object": "refund",
@@ -1999,7 +1999,7 @@ class TransferTest(_ResourceMixin):
         self.assertFalse(transfer.paid)
         self.assertEqual(transfer.id, 'trsf_test')
         self.assertEqual(transfer.amount, 100000)
-        self.assertIsNone(transfer.transaction)
+        self.assertEqual(transfer.transaction, None)
         self.assertRequest(api_call, 'https://api.omise.co/transfers/trsf_test')
 
         self.mockResponse(api_call, """{
