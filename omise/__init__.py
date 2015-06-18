@@ -26,6 +26,12 @@ except NameError:
     basestring = str
 
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+
 # Settings
 api_secret = None
 api_public = None
@@ -45,10 +51,13 @@ logger = logging.getLogger(__name__)
 __all__ = [
     'Account',
     'Balance',
+    'BankAccount',
     'Card',
     'Charge',
     'Collection',
     'Customer',
+    'Dispute',
+    'Recipient',
     'Refund',
     'Token',
     'Transaction',
@@ -69,10 +78,13 @@ def _get_class_for(type):
     return {
         'account': Account,
         'balance': Balance,
+        'bank_account': BankAccount,
         'token': Token,
         'card': Card,
         'charge': Charge,
         'customer': Customer,
+        'dispute': Dispute,
+        'recipient': Recipient,
         'refund': Refund,
         'transfer': Transfer,
         'transaction': Transaction,
@@ -182,12 +194,13 @@ class Request(object):
     def _build_payload(self, payload):
         if payload is None:
             payload = {}
-        return payload
+        return json.dumps(payload)
 
     def _build_headers(self, headers):
         if headers is None:
             headers = {}
         headers['Accept'] = 'application/json'
+        headers['Content-Type'] = 'application/json'
         headers['User-Agent'] = 'OmisePython/%s OmiseAPI/%s' % (
             version.__VERSION__,
             api_compat)
@@ -373,6 +386,32 @@ class Balance(_MainResource, Base):
         return self._reload_data(self._request('get', self._instance_path()))
 
 
+class BankAccount(Base):
+    """API class representing bank account details.
+
+    This API class represents a bank account information returned from other
+    APIs. Bank accounts are not created directly with this class, but instead
+    created with :class:`Recipient`.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> recipient = omise.Recipient.retrieve('recp_test_5086xmr74vxs0ajpo78')
+        >>> bank_account = recipient.bank_account
+        <BankAccount name='SOMCHAI PRASERT' at 0x7f79c41e9d00>
+        >>> bank_account.name
+        'SOMCHAI PRASERT'
+    """
+
+    def __repr__(self):
+        name = self._attributes.get('name')
+        return '<%s%s at %s>' % (
+            type(self).__name__,
+            ' name=%s' % repr(str(name)) if name else '',
+            hex(id(self)))
+
+
 class Token(_VaultResource, Base):
     """API class for creating and retrieving credit card token with the API.
 
@@ -434,9 +473,7 @@ class Token(_VaultResource, Base):
         :param \*\*kwargs: arguments to create a token.
         :rtype: Token
         """
-        transformed_args = {}
-        for key, value in iteritems(kwargs):
-            transformed_args['card[%s]' % key] = value
+        transformed_args = dict(card=kwargs)
         return _as_object(
             cls._request('post',
                          cls._collection_path(),
@@ -835,6 +872,224 @@ class Customer(_MainResource, Base):
     @property
     def destroyed(self):
         """Returns ``True`` if customer has been deleted.
+
+        :rtype: bool
+        """
+        return self._attributes.get('deleted', False)
+
+
+class Dispute(_MainResource, Base):
+    """API class representing a recipient in an account.
+
+    This API class is used for retrieving and updating a dispute in an
+    account for charge back handling.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> dispute = omise.Dispute.retrieve('dspt_test_4zgf15h89w8t775kcm8')
+        <Recipient id='dspt_test_4zgf15h89w8t775kcm8' at 0x7fd06ce3d5d0>
+        >>> dispute.status
+        'open'
+    """
+
+    @classmethod
+    def _collection_path(cls, status=None):
+        if status:
+            return ('disputes', status)
+        return 'disputes'
+
+    @classmethod
+    def _instance_path(cls, dispute_id):
+        return ('disputes', dispute_id)
+
+    @classmethod
+    def retrieve(cls, *args, **kwargs):
+        if len(args) > 0:
+            return _as_object(cls._request('get', cls._instance_path(args[0])))
+        elif 'status' in kwargs:
+            return _as_object(
+                cls._request('get',
+                             cls._collection_path(kwargs['status'])))
+        return _as_object(cls._request('get', cls._collection_path()))
+
+    def reload(self):
+        """Reload the dispute details.
+
+        :rtype: Dispute
+        """
+        return self._reload_data(
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
+
+    def update(self, **kwargs):
+        """Update the dispute details with the given arguments.
+
+        See the `update a dispute`_ section in the API documentation for list
+        of available arguments.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+            >>> dspt = omise.Dispute.retrieve('dspt_test_4zgf15h89w8t775kcm8')
+            >>> dspt.update(message='Proofs and other information')
+            <Dispute id='dspt_test_4zgf15h89w8t775kcm8' at 0x7fd06cd56210>
+
+        :param \*\*kwargs: arguments to update a dispute.
+        :rtype: Recipient
+
+        .. _update a dispute:
+        ..     https://docs.omise.co/api/recipients/#disputes-update
+        """
+        changed = copy.deepcopy(self.changes)
+        changed.update(kwargs)
+        return self._reload_data(
+            self._request('patch',
+                          self._instance_path(self._attributes['id']),
+                          changed))
+
+
+class Recipient(_MainResource, Base):
+    """API class representing a recipient in an account.
+
+    This API class is used for retrieving and creating a recipient in an
+    account. The recipient can be used to transfer the balance to specific
+    bank accounts.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> recipient = omise.Recipient.retrieve('recp_test_5086xmr74vxs0ajpo78')
+        <Recipient id='recp_test_5086xmr74vxs0ajpo78' at 0x7f79c41e9eb8>
+        >>> recipient.name
+        'Foobar Baz'
+    """
+
+    @classmethod
+    def _collection_path(cls):
+        return 'recipients'
+
+    @classmethod
+    def _instance_path(cls, recipient_id):
+        return ('recipients', recipient_id)
+
+    @classmethod
+    def create(cls, **kwargs):
+        """Create a recipient with the given parameters.
+
+        See the `create a recipient`_ section in the API documentation for list
+        of available arguments.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+            >>> customer = omise.Recipient.create(
+            ...     name='Somchai Prasert',
+            ...     email='somchai.prasert@example.com',
+            ...     type='individual',
+            ...     bank_account=dict(
+            ...       brand='bbl',
+            ...       number='1234567890',
+            ...       name='SOMCHAI PRASERT'
+            ...     )
+            ... )
+            <Recipient id='recp_test_5086xmr74vxs0ajpo78' at 0x7f79c41e9e90>
+
+        .. _create a recipient:
+        ..     https://docs.omise.co/api/recipients/#recipients-create
+
+        :param \*\*kwargs: arguments to create a recipient.
+        :rtype: Recipient
+        """
+        return _as_object(
+            cls._request('post',
+                         cls._collection_path(),
+                         kwargs))
+
+    @classmethod
+    def retrieve(cls, recipient_id=None):
+        """Retrieve the recipient details for the given :param:`recipient_id`.
+        If :param:`recipient_id` is not given, all recipients will be returned
+        instead.
+
+        :param recipient_id: (optional) a recipient id to retrieve.
+        :type recipient_id: str
+        :rtype: Recipient
+        """
+        if recipient_id:
+            return _as_object(cls._request('get',
+                                           cls._instance_path(recipient_id)))
+        return _as_object(cls._request('get', cls._collection_path()))
+
+    def reload(self):
+        """Reload the recipient details.
+
+        :rtype: Recipient
+        """
+        return self._reload_data(
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
+
+    def update(self, **kwargs):
+        """Update the recipient details with the given arguments.
+
+        See the `update a recipient`_ section in the API documentation for list
+        of available arguments.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+            >>> recp = omise.Recipient.retrieve('recp_test_5086xmr74vxs0ajpo78')
+            >>> recp.update(
+            ...     email='somchai@prasert.com',
+            ...     bank_account=dict(
+            ...       brand='kbank',
+            ...       number='1234567890',
+            ...       name='SOMCHAI PRASERT'
+            ...     )
+            ... )
+            <Recipient id='recp_test_5086xmr74vxs0ajpo78' at 0x7f79c41e9d00>
+
+        :param \*\*kwargs: arguments to update a recipient.
+        :rtype: Recipient
+
+        .. _update a recipient:
+        ..     https://docs.omise.co/api/recipients/#recipients-update
+        """
+        changed = copy.deepcopy(self.changes)
+        changed.update(kwargs)
+        return self._reload_data(
+            self._request('patch',
+                          self._instance_path(self._attributes['id']),
+                          changed))
+
+    def destroy(self):
+        """Delete the recipient from the server.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+            >>> recp = omise.Recipient.retrieve('recp_test_5086xmr74vxs0ajpo78')
+            >>> recp.destroy()
+            <Recipient id='recp_test_5086xmr74vxs0ajpo78' at 0x7f775ff01c60>
+            >>> recp.destroyed
+            True
+
+        :rtype: Recipient
+        """
+        return self._reload_data(
+            self._request('delete',
+                          self._instance_path(self.id)))
+
+    @property
+    def destroyed(self):
+        """Returns ``True`` if the recipient has been deleted.
 
         :rtype: bool
         """

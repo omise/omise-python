@@ -9,6 +9,7 @@ __all__ = [
     'FailedCaptureError',
     'FailedFraudCheckError',
     'FailedRefundError',
+    'InvalidRecipientError',
 ]
 
 
@@ -31,6 +32,7 @@ def _get_error_for(type):
         'failed_capture': FailedCaptureError,
         'failed_fraud_check': FailedFraudCheckError,
         'failed_refund': FailedRefundError,
+        'invalid_recipient': InvalidRecipientError,
     }.get(type)
 
 
@@ -85,6 +87,10 @@ class FailedCaptureError(BaseError):
 
 
 class FailedFraudCheckError(BaseError):
+    pass
+
+
+class InvalidRecipientError(BaseError):
     pass
 
 
