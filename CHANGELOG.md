@@ -1,3 +1,9 @@
+## Future release
+
+This version adds support for configuring Omise API version via `omise.api_version` settings. If this version is set, it will be used instead of the one setting in your Omise account.
+
+* [Added] Add API versioning support.
+
 ## [0.2.1] - 2015-08-03
 
 This version is a maintenance release which updates the bundled CA certificate file to latest version. The old CA certificate will no longer be able to connect with Omise API by August 18th, 2015. There is no added APIs or behavior changes in this release.
