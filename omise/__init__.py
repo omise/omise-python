@@ -35,7 +35,7 @@ except ImportError:
 # Settings
 api_secret = None
 api_public = None
-api_version = '2014-07-27'
+api_version = None
 
 
 # API constants
@@ -202,7 +202,8 @@ class Request(object):
             headers = {}
         headers['Accept'] = 'application/json'
         headers['Content-Type'] = 'application/json'
-        headers['Omise-Version'] = self.api_version
+        if self.api_version is not None:
+            headers['Omise-Version'] = self.api_version
         headers['User-Agent'] = 'OmisePython/%s' % version.__VERSION__
         return headers
 
