@@ -1,4 +1,4 @@
-## Future release
+## [0.3.0] - 2015-11-13
 
 This version adds support for configuring Omise API version via `omise.api_version` settings. If this version is set, it will be used instead of the one setting in your Omise account.
 
