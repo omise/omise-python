@@ -35,10 +35,10 @@ except ImportError:
 # Settings
 api_secret = None
 api_public = None
+api_version = None
 
 
 # API constants
-api_compat = '2014-07-27'
 api_main = 'https://api.omise.co'
 api_vault = 'https://vault.omise.co'
 
@@ -126,11 +126,12 @@ class Request(object):
         {'email': 'foo@example.com', 'object': 'account', ...}
     """
 
-    def __init__(self, api_key, api_base):
+    def __init__(self, api_key, api_base, api_version):
         if api_key is None:
             raise AttributeError('API key is not set.')
         self.api_key = api_key
         self.api_base = api_base
+        self.api_version = api_version
 
     def send(self, method, path, payload=None, headers=None):
         """Make a request to the API endpoint and return a JSON response.
@@ -201,9 +202,9 @@ class Request(object):
             headers = {}
         headers['Accept'] = 'application/json'
         headers['Content-Type'] = 'application/json'
-        headers['User-Agent'] = 'OmisePython/%s OmiseAPI/%s' % (
-            version.__VERSION__,
-            api_compat)
+        if self.api_version is not None:
+            headers['Omise-Version'] = self.api_version
+        headers['User-Agent'] = 'OmisePython/%s' % version.__VERSION__
         return headers
 
 
@@ -303,14 +304,14 @@ class _MainResource(Base):
 
     @classmethod
     def _request(cls, *args, **kwargs):
-        return Request(api_secret, api_main).send(*args, **kwargs)
+        return Request(api_secret, api_main, api_version).send(*args, **kwargs)
 
 
 class _VaultResource(Base):
 
     @classmethod
     def _request(cls, *args, **kwargs):
-        return Request(api_public, api_vault).send(*args, **kwargs)
+        return Request(api_public, api_vault, api_version).send(*args, **kwargs)
 
 
 class Account(_MainResource, Base):

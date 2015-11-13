@@ -60,6 +60,17 @@ True
 
 In case of any errors (such as authentication failure, invalid card and others as listed in [errors](https://docs.omise.co/api/errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raise. The application code must be handling these errors as appropriate.
 
+### API version
+
+In case you want to enforce API version the application use, you can specify it by setting `api_version`. The version specified by this settings will override the version setting in your account. This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
+
+```python
+>>> import omise
+>>> omise.api_version = '2014-07-27'
+```
+
+It is highly recommended to set this version to the current version you're using.
+
 ## Contributing
 
 The Omise Python client uses [Vagrant](https://www.vagrantup.com/) for development environment provisioning and require all changes to be tested against all supported Python versions. You can bootstrap the environment with the following instructions:
