@@ -559,7 +559,8 @@ class ChargeTest(_ResourceMixin):
             'customer': None,
             'id': 'chrg_test',
             'captured': False,
-            'authorized': True
+            'authorized': True,
+            'reversed': False
         })
 
     @mock.patch('requests.post')
@@ -576,6 +577,7 @@ class ChargeTest(_ResourceMixin):
             "description": "Order-384",
             "capture": false,
             "authorized": false,
+            "reversed": false,
             "captured": false,
             "transaction": null,
             "refunded": 0,
@@ -655,6 +657,7 @@ class ChargeTest(_ResourceMixin):
             "description": "Order-384",
             "capture": false,
             "authorized": true,
+            "reversed": false,
             "captured": false,
             "transaction": null,
             "refunded": 0,
@@ -713,6 +716,7 @@ class ChargeTest(_ResourceMixin):
             "description": "Order-384",
             "capture": false,
             "authorized": true,
+            "reversed": false,
             "captured": false,
             "transaction": null,
             "refunded": 0,
@@ -886,6 +890,7 @@ class ChargeTest(_ResourceMixin):
             "description": "New description",
             "capture": false,
             "authorized": true,
+            "reversed": false,
             "captured": false,
             "transaction": null,
             "failure_code": null,
@@ -948,6 +953,7 @@ class ChargeTest(_ResourceMixin):
             "description": "New description",
             "capture": false,
             "authorized": true,
+            "reversed": false,
             "captured": true,
             "transaction": null,
             "failure_code": null,
@@ -994,6 +1000,67 @@ class ChargeTest(_ResourceMixin):
             'https://api.omise.co/charges/chrg_test/capture',
         )
 
+    @mock.patch('requests.post')
+    def test_reverse(self, api_call):
+        charge = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "location": "/charges/chrg_test",
+            "amount": 100000,
+            "currency": "thb",
+            "description": "New description",
+            "capture": false,
+            "authorized": true,
+            "reversed": true,
+            "captured": false,
+            "transaction": null,
+            "failure_code": null,
+            "failure_message": null,
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "card": {
+                "object": "card",
+                "id": "card_test",
+                "livemode": false,
+                "country": "th",
+                "city": "Bangkok",
+                "postal_code": "10320",
+                "financing": "credit",
+                "last_digits": "4242",
+                "brand": "Visa",
+                "expiration_month": 10,
+                "expiration_year": 2018,
+                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                "name": "Somchai Prasert",
+                "created": "2014-10-20T09:41:56Z"
+            },
+            "customer": null,
+            "ip": "127.0.0.1",
+            "created": "2014-10-21T11:12:28Z"
+        }""")
+
+        self.assertTrue(isinstance(charge, class_))
+        self.assertFalse(charge.reversed)
+        charge.reverse()
+
+        self.assertTrue(charge.reversed)
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges/chrg_test/reverse',
+        )
+
     @mock.patch('requests.get')
     @mock.patch('requests.post')
     def test_refund(self, api_call, reload_call):
@@ -1020,6 +1087,7 @@ class ChargeTest(_ResourceMixin):
             "description": "New description",
             "capture": true,
             "authorized": true,
+            "reversed": false,
             "captured": true,
             "transaction": null,
             "failure_code": null,

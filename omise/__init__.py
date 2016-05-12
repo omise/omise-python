@@ -701,6 +701,14 @@ class Charge(_MainResource, Base):
         path = self._instance_path(self._attributes['id']) + ('capture',)
         return self._reload_data(self._request('post', path))
 
+    def reverse(self):
+        """Reverse an uncaptured charge.
+
+        :rtype: Charge
+        """
+        path = self._instance_path(self._attributes['id']) + ('reverse',)
+        return self._reload_data(self._request('post', path))
+
     def refund(self, **kwargs):
         """Refund a refundable charge.
 
