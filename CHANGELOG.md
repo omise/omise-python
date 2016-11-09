@@ -1,3 +1,14 @@
+## [0.4.0] - 2016-11-10
+
+This version adds support for event and reversal API as well as dropping support for Python 3.1 and Python 3.2 in favor for Ptyhon 3.4 and Python 3.5.
+
+* [Added] Add Reversal API support.
+* [Added] Add Event API support.
+* [Added] Official support for Python 3.4.
+* [Added] Official support for Python 3.5.
+* [Removed] Official support for Python 3.1.
+* [Removed] Official support for Python 3.2.
+
 ## [0.3.0] - 2015-11-13
 
 This version adds support for configuring Omise API version via `omise.api_version` settings. If this version is set, it will be used instead of the one setting in your Omise account.
