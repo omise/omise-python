@@ -176,7 +176,7 @@ class Request(object):
             request_path,
             data=request_payload,
             headers=request_headers,
-            auth=(self.api_key, None),
+            auth=(self.api_key, ''),
             verify=os.path.join(
                 os.path.dirname(__file__),
                 'data/ca_certificates.pem')

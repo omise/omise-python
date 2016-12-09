@@ -1,3 +1,9 @@
+## [0.4.1] - 2016-12-09
+
+This version fixes compatibility with [Requests](https://github.com/kennethreitz/requests/) library version 2.12.1 and above.
+
+* [Fixed] Compatibility with Requests 2.12.1. 
+
 ## [0.4.0] - 2016-11-10
 
 This version adds support for event and reversal API as well as dropping support for Python 3.1 and Python 3.2 in favor for Ptyhon 3.4 and Python 3.5.

@@ -44,7 +44,7 @@ class _RequestAssertable(object):
             url,
             data=json.dumps(data),
             headers=headers,
-            auth=mock.ANY,
+            auth=(mock.ANY, ''),
             verify=mock.ANY)
 
 

@@ -12,13 +12,13 @@ except ImportError:
     from distutils.core import setup
 
 setup(name='omise',
-      version='0.4.0',
+      version='0.4.1',
       description='Omise Python client',
       author='Omise',
       author_email='support@omise.co',
       url='https://www.omise.co/',
       packages=['omise', 'omise.test'],
-      install_requires=['requests >= 2.4.3'],
+      install_requires=['requests >= 2.12.1'],
       tests_require=['nose >= 1.3.4', 'mock >= 1.0.1'],
       test_suite='omise.test',
       package_data={'omise': ['data/ca_certificates.pem']},
