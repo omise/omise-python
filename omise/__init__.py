@@ -197,7 +197,7 @@ class Request(object):
     def _build_payload(self, payload):
         if payload is None:
             payload = {}
-        return json.dumps(payload)
+        return json.dumps(payload, sort_keys=True)
 
     def _build_headers(self, headers):
         if headers is None:

@@ -42,7 +42,7 @@ class _RequestAssertable(object):
             headers = mock.ANY
         api_call.assert_called_with(
             url,
-            data=json.dumps(data),
+            data=json.dumps(data, sort_keys=True),
             headers=headers,
             auth=(mock.ANY, ''),
             verify=mock.ANY)
