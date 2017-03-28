@@ -1,3 +1,9 @@
+## [0.5.0] - 2017-03-28
+
+This version adds support for link API.
+
+* [Added] Add Link API support.
+
 ## [0.4.1] - 2016-12-09
 
 This version fixes compatibility with [Requests](https://github.com/kennethreitz/requests/) library version 2.12.1 and above.
