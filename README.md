@@ -20,11 +20,11 @@ easy_install omise
 
 The Omise Python client officially supports the following Python versions:
 
-* Python 2.6
 * Python 2.7
 * Python 3.3
 * Python 3.4
 * Python 3.5
+* Python 3.6
 
 Any versions not listed here _may_ work but they are not automatically tested.
 
