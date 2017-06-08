@@ -58,6 +58,7 @@ __all__ = [
     'Customer',
     'Dispute',
     'Event',
+    'Forex',
     'Link',
     'Recipient',
     'Refund',
@@ -87,6 +88,7 @@ def _get_class_for(type):
         'customer': Customer,
         'dispute': Dispute,
         'event': Event,
+        'forex': Forex,
         'link': Link,
         'recipient': Recipient,
         'refund': Refund,
@@ -1011,6 +1013,34 @@ class Event(_MainResource, Base):
         return self._reload_data(
             self._request('get',
                           self._instance_path(self._attributes['id'])))
+
+
+class Forex(_MainResource, Base):
+    """API class retrieves the currency exchange.
+
+    The Forex API retrieves the currency exchange rate used in
+    conversions for multi-currency transactions based on account's PSP.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> forex = omise.Forex.retrieve('usd')
+        <Forex at 0x10bd794e0>
+        >>> forex.rate
+        32.747069
+    """
+
+    @classmethod
+    def retrieve(cls, currency):
+        """Retrieve the exchange rate for the given :param:`currency`.
+
+        :param currency: a currency to exchange.
+        :type currency: str
+        :rtype: Forex
+        """
+        return _as_object(
+            cls._request('get', ('forex', currency)))
 
 
 class Link(_MainResource, Base):
