@@ -63,6 +63,7 @@ __all__ = [
     'Occurrence',
     'Recipient',
     'Refund',
+    'Search',
     'Schedule'
     'Token',
     'Transaction',
@@ -95,6 +96,7 @@ def _get_class_for(type):
         'occurrence': Occurrence,
         'recipient': Recipient,
         'refund': Refund,
+        'search': Search,
         'schedule': Schedule,
         'transfer': Transfer,
         'transaction': Transaction,
@@ -1350,6 +1352,33 @@ class Refund(_MainResource, Base):
         return self._reload_data(
             self._request('get',
                           self._attributes['location']))
+
+
+class Search(_MainResource, Base):
+    def __len__(self):
+        return len(self._attributes['data'])
+
+    def __iter__(self):
+        for obj in self._attributes['data']:
+            yield _as_object(obj)
+
+    def __getitem__(self, item):
+        return _as_object(self._attributes['data'][item])
+
+    @classmethod
+    def execute(cls, scope, **options):
+        querystring = ['?scope=%s' % scope]
+
+        for key, val in options.items():
+            if isinstance(val, dict):
+                for k, v in val.items():
+                    querystring.append('%s[%s]=%s' % (key, k, v))
+            else:
+                querystring.append('%s=%s' % (key, val))
+
+        return _as_object(
+            cls._request('get',
+                         ('search', '&'.join(querystring))))
 
 
 class Schedule(_MainResource, Base):
