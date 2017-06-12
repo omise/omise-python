@@ -16,12 +16,12 @@ Vagrant.configure("2") do |config|
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc
     source ~/.bashrc
 
-    ~/.pyenv/bin/pyenv install 2.6.9
     ~/.pyenv/bin/pyenv install 2.7.12
     ~/.pyenv/bin/pyenv install 3.3.6
     ~/.pyenv/bin/pyenv install 3.4.5
     ~/.pyenv/bin/pyenv install 3.5.2
-    ~/.pyenv/bin/pyenv global 2.6.9 2.7.12 3.3.6 3.4.5 3.5.2
+    ~/.pyenv/bin/pyenv install 3.6.1
+    ~/.pyenv/bin/pyenv global 2.7.12 3.3.6 3.4.5 3.5.2 3.6.1
     ~/.pyenv/bin/pyenv rehash
 
     virtualenv -p python2.7 $HOME/venv/py27
