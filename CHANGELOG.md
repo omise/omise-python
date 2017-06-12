@@ -1,3 +1,13 @@
+## [0.6.0] - 2017-06-12
+
+This version adds support for Forex API, and Search API, Schedule API and Occurrence API and drop support drop and support Python new version.
+
+* [Added] Add Forex API.
+* [Added] Add Search API.
+* [Added] Add Schedule API.
+* [Added] Add Occurrence API.
+* [Changed] Drop support Python 2.6 and add support Python 3.6.
+
 ## [0.5.0] - 2017-03-28
 
 This version adds support for link API.
@@ -8,7 +18,7 @@ This version adds support for link API.
 
 This version fixes compatibility with [Requests](https://github.com/kennethreitz/requests/) library version 2.12.1 and above.
 
-* [Fixed] Compatibility with Requests 2.12.1. 
+* [Fixed] Compatibility with Requests 2.12.1.
 
 ## [0.4.0] - 2016-11-10
 

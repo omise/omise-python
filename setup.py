@@ -12,7 +12,7 @@ except ImportError:
     from distutils.core import setup
 
 setup(name='omise',
-      version='0.5.0',
+      version='0.6.0',
       description='Omise Python client',
       author='Omise',
       author_email='support@omise.co',
