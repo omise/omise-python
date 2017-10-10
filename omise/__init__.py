@@ -64,7 +64,7 @@ __all__ = [
     'Recipient',
     'Refund',
     'Search',
-    'Schedule'
+    'Schedule',
     'Token',
     'Transaction',
     'Transfer',
@@ -133,7 +133,7 @@ class Request(object):
     Basic usage::
 
         >>> import omise
-        >>> r = omise.Request('skey_test', 'http://api.omise.co/')
+        >>> r = omise.Request('skey_test', 'http://api.omise.co/', '2015-11-17')
         >>> r.send('get', 'account')
         {'email': 'foo@example.com', 'object': 'account', ...}
     """
@@ -1032,8 +1032,7 @@ class Event(_MainResource, Base):
         :rtype: Event
         """
         if event_id:
-            return _as_object(cls._request('get',
-                                            cls._instance_path(event_id)))
+            return _as_object(cls._request('get', cls._instance_path(event_id)))
         return _as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):

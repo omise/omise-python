@@ -63,6 +63,7 @@ class RequestTest(_RequestAssertable, unittest.TestCase):
 
     def test_init_no_api_key(self):
         class_ = self._getTargetClass()
+
         def _func():
             class_(None, 'https://api.omise.co', '2015-11-01')
         self.assertRaises(AttributeError, _func)
@@ -1257,6 +1258,7 @@ class CollectionTest(_ResourceMixin):
         self.assertEqual(next(iterable).id, 'acct_test_2')
         self.assertEqual(next(iterable).id, 'acct_test_3')
         self.assertEqual(next(iterable).id, 'acct_test_4')
+
         def _func():
             next(iterable)
         self.assertRaises(StopIteration, _func)
@@ -1280,6 +1282,7 @@ class CollectionTest(_ResourceMixin):
 
     def test_retrieve_no_args(self):
         collection = self._makeOne()
+
         def _extract_id(item):
             return item.id
         firstItem = collection.retrieve()[0]
@@ -1927,13 +1930,11 @@ class EventTest(_ResourceMixin):
         self.assertEqual(event.id, 'evnt_test')
         self.assertEqual(event.key, 'charge.create')
 
-        charge_class_ = self._getChargeClass()
         charge = event.data
         self.assertEqual(charge.object, 'charge')
         self.assertEqual(charge.id, 'chrg_test')
         self.assertEqual(charge.amount, 500000)
 
-        card_class_ = self._getCardClass()
         card = charge.card
         self.assertEqual(card.object, 'card')
         self.assertEqual(card.id, 'card_test')
