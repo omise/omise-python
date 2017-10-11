@@ -65,6 +65,7 @@ __all__ = [
     'Refund',
     'Search',
     'Schedule',
+    'Source',
     'Token',
     'Transaction',
     'Transfer',
@@ -98,6 +99,7 @@ def _get_class_for(type):
         'refund': Refund,
         'search': Search,
         'schedule': Schedule,
+        'source': Source,
         'transfer': Transfer,
         'transaction': Transaction,
         'list': Collection,
@@ -1526,6 +1528,14 @@ class Schedule(_MainResource, Base):
         path = self._instance_path(self._attributes['id']) + ('occurrences',)
         occurrences = _as_object(self._request('get', path))
         return occurrences
+
+
+class Source(_MainResource, Base):
+    @classmethod
+    def create(cls, **kwargs):
+        return _as_object(
+            cls._request('post',
+                         'sources', kwargs))
 
 
 class Transfer(_MainResource, Base):
