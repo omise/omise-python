@@ -512,6 +512,10 @@ class ChargeTest(_ResourceMixin):
         from .. import Card
         return Card
 
+    def _getSourceClass(self):
+        from .. import Source
+        return Source
+
     def _getCollectionClass(self):
         from .. import Collection
         return Collection
@@ -641,6 +645,80 @@ class ChargeTest(_ResourceMixin):
                 'description': 'Order-384',
                 'ip': '127.0.0.1',
                 'card': 'tokn_test',
+            }
+        )
+
+    @mock.patch('requests.post')
+    def test_create_with_source(self, api_call):
+        class_ = self._getTargetClass()
+        source_class_ = self._getSourceClass()
+        self.mockResponse(api_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "location": "/charges/chrg_test",
+            "amount": 100000,
+            "currency": "thb",
+            "description": null,
+            "metadata": {},
+            "status": "pending",
+            "capture": true,
+            "authorized": false,
+            "reversed": false,
+            "paid": false,
+            "transaction": null,
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "location": "/charges/chrg_test/refunds",
+                "data": []
+            },
+            "return_uri": "http://www.google.com",
+            "reference": "ofsp_test",
+            "authorize_uri": "https://pay.omise.co/offsites/ofsp_test/pay",
+            "failure_code": null,
+            "failure_message": null,
+            "card": null,
+            "customer": null,
+            "ip": null,
+            "dispute": null,
+            "created": "2014-10-21T11:12:28Z",
+            "source": {
+                "object": "source",
+                "id": "src_test",
+                "type": "internet_banking_test",
+                "flow": "redirect",
+                "amount": 100000,
+                "currency": "thb"
+            }
+        }""")
+
+        charge = class_.create(
+            amount=100000,
+            currency='thb',
+            source='src_test',
+            return_uri='http://www.google.com'
+        )
+
+        self.assertTrue(isinstance(charge, class_))
+        self.assertTrue(isinstance(charge.source, source_class_))
+        self.assertEqual(charge.id, 'chrg_test')
+        self.assertEqual(charge.amount, 100000)
+        self.assertEqual(charge.currency, 'thb')
+        self.assertEqual(charge.source.id, 'src_test')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges',
+            {
+                'amount': 100000,
+                'currency': 'thb',
+                'source': 'src_test',
+                'return_uri': 'http://www.google.com'
             }
         )
 
