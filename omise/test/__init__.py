@@ -722,6 +722,33 @@ class ChargeTest(_ResourceMixin):
             }
         )
 
+        charge = class_.create(
+            amount=100000,
+            currency='thb',
+            source={
+                'type': 'internet_banking_test'
+            },
+            return_uri='http://www.google.com'
+        )
+
+        self.assertTrue(isinstance(charge, class_))
+        self.assertTrue(isinstance(charge.source, source_class_))
+        self.assertEqual(charge.id, 'chrg_test')
+        self.assertEqual(charge.amount, 100000)
+        self.assertEqual(charge.currency, 'thb')
+        self.assertEqual(charge.source.id, 'src_test')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges', {
+                'amount': 100000,
+                'currency': 'thb',
+                'source': {
+                    'type': 'internet_banking_test'
+                },
+                'return_uri': 'http://www.google.com'
+            }
+        )
+
     @mock.patch('requests.get')
     def test_retrieve(self, api_call):
         class_ = self._getTargetClass()
