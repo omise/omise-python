@@ -64,7 +64,8 @@ __all__ = [
     'Recipient',
     'Refund',
     'Search',
-    'Schedule'
+    'Schedule',
+    'Source',
     'Token',
     'Transaction',
     'Transfer',
@@ -98,6 +99,7 @@ def _get_class_for(type):
         'refund': Refund,
         'search': Search,
         'schedule': Schedule,
+        'source': Source,
         'transfer': Transfer,
         'transaction': Transaction,
         'list': Collection,
@@ -133,7 +135,7 @@ class Request(object):
     Basic usage::
 
         >>> import omise
-        >>> r = omise.Request('skey_test', 'http://api.omise.co/')
+        >>> r = omise.Request('skey_test', 'http://api.omise.co/', '2015-11-17')
         >>> r.send('get', 'account')
         {'email': 'foo@example.com', 'object': 'account', ...}
     """
@@ -1032,8 +1034,7 @@ class Event(_MainResource, Base):
         :rtype: Event
         """
         if event_id:
-            return _as_object(cls._request('get',
-                                            cls._instance_path(event_id)))
+            return _as_object(cls._request('get', cls._instance_path(event_id)))
         return _as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):
@@ -1527,6 +1528,51 @@ class Schedule(_MainResource, Base):
         path = self._instance_path(self._attributes['id']) + ('occurrences',)
         occurrences = _as_object(self._request('get', path))
         return occurrences
+
+
+class Source(_MainResource, Base):
+    """API class for creating Source.
+
+    This API class is used for creating a source which are enabled to the
+    following payment methods.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+        >>> source = omise.Source.create(
+            amount=100000,
+            currency='thb',
+            type='internet_banking_scb'
+        )
+        <Source id='src_test_59ldo3ltuz7418db4ol' at 0x106473668>
+        >>> charge = omise.Charge.create(
+            amount=100000,
+            currency='thb',
+            source=source.id,
+            return_uri='https://www.omise.co'
+        )
+        <Charge id='chrg_test_4xso2s8ivdej29pqnhz' at 0x7fed3241b990>
+        >>> charge.source
+        <Source id='src_test_59ldo3ltuz7418db4ol' at 0x1064736a0>
+
+        or
+
+        charge = omise.Charge.create(
+            amount=100000,
+            currency='thb',
+            source={
+                'type': 'internet_banking_scb'
+            },
+            return_uri='https://www.omise.co'
+        )
+    """
+
+    @classmethod
+    def create(cls, **kwargs):
+        return _as_object(
+            cls._request('post',
+                         'sources', kwargs))
 
 
 class Transfer(_MainResource, Base):
