@@ -1,3 +1,10 @@
+## [0.7.0] - 2017-10-17
+
+This version adds support for Receipt API, and Source API.
+
+* [Added] Add Receipt API.
+* [Added] Add Source API.
+
 ## [0.6.0] - 2017-06-12
 
 This version adds support for Forex API, and Search API, Schedule API and Occurrence API and drop and add support Python new version.

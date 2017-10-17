@@ -3,7 +3,7 @@ import os
 
 # Workaround for hardlink problem in Python 2.7+
 # See also: http://bugs.python.org/issue8876
-if os.environ.get('USER','') == 'vagrant':
+if os.environ.get('USER', '') == 'vagrant':
     del os.link
 
 try:
@@ -12,7 +12,7 @@ except ImportError:
     from distutils.core import setup
 
 setup(name='omise',
-      version='0.6.0',
+      version='0.7.0',
       description='Omise Python client',
       author='Omise',
       author_email='support@omise.co',
