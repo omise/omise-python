@@ -840,14 +840,18 @@ class Customer(_MainResource, Base):
                          kwargs))
 
     @classmethod
-    def retrieve(cls, customer_id):
+    def retrieve(cls, customer_id=None):
         """Retrieve the customer details for the given :param:`customer_id`.
 
         :param customer_id: a customer id to retrieve.
         :type customer_id: str
         :rtype: Customer
         """
-        return _as_object(cls._request('get', cls._instance_path(customer_id)))
+        if customer_id:
+            return _as_object(
+                cls._request('get',
+                             cls._instance_path(customer_id)))
+        return _as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):
         """Reload the customer details.
