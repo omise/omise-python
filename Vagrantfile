@@ -1,5 +1,6 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "bento/ubuntu-16.04"
+
   config.vm.provision :shell, privileged: true, inline: <<-EOF
     sudo apt-get -y update
     sudo apt-get -y install curl git-core
@@ -16,12 +17,12 @@ Vagrant.configure("2") do |config|
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc
     source ~/.bashrc
 
-    ~/.pyenv/bin/pyenv install 2.7.12
-    ~/.pyenv/bin/pyenv install 3.3.6
-    ~/.pyenv/bin/pyenv install 3.4.5
-    ~/.pyenv/bin/pyenv install 3.5.2
-    ~/.pyenv/bin/pyenv install 3.6.1
-    ~/.pyenv/bin/pyenv global 2.7.12 3.3.6 3.4.5 3.5.2 3.6.1
+    ~/.pyenv/bin/pyenv install 2.7.14
+    ~/.pyenv/bin/pyenv install 3.3.7
+    ~/.pyenv/bin/pyenv install 3.4.7
+    ~/.pyenv/bin/pyenv install 3.5.4
+    ~/.pyenv/bin/pyenv install 3.6.3
+    ~/.pyenv/bin/pyenv global 2.7.14 3.3.7 3.4.7 3.5.4 3.6.3
     ~/.pyenv/bin/pyenv rehash
 
     virtualenv -p python2.7 $HOME/venv/py27
