@@ -3,8 +3,8 @@ import os
 import requests
 import sys
 
-from omise import version
-from omise import errors
+from . import version
+from . import errors
 
 
 if sys.version_info[0] == 3:
