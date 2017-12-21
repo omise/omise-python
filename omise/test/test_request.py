@@ -1,7 +1,7 @@
 import mock
 import unittest
 
-from omise.test.helper import _RequestAssertable
+from .helper import _RequestAssertable
 
 
 class RequestTest(_RequestAssertable, unittest.TestCase):

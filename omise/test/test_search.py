@@ -1,7 +1,7 @@
 import mock
 import unittest
 
-from omise.test.helper import _ResourceMixin
+from .helper import _ResourceMixin
 
 
 class SearchTest(_ResourceMixin, unittest.TestCase):
