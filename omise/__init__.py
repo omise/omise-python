@@ -1,8 +1,7 @@
 import copy
-import logging
 import sys
 
-from omise.request import Request
+from .request import Request
 
 
 if sys.version_info[0] == 3:
@@ -23,11 +22,6 @@ api_version = None
 # API constants
 api_main = 'https://api.omise.co'
 api_vault = 'https://vault.omise.co'
-
-
-# Logging
-logging.basicConfig()
-logger = logging.getLogger(__name__)
 
 
 __all__ = [
