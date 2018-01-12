@@ -1,3 +1,11 @@
+## [0.8.0] - 2018-01-11
+
+This version adds support for Receipt API, and Source API.
+
+* [Fixed] Allow customer to be able to retrieve customer list.
+* [Changed] Split test classes to each file.
+* [Changed] Split request class to new file.
+
 ## [0.7.0] - 2017-10-17
 
 This version adds support for Receipt API, and Source API.
