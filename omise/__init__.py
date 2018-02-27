@@ -1275,11 +1275,11 @@ class Search(_MainResource, Base):
 
         >>> import omise
         >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
-        >>> search = omise.Search.execute('charge', {
-            "query": "thb",
-            "filters": {
-                "amount": "1000..2000",
-                "captured": 'true'
+        >>> search = omise.Search.execute('charge', **{
+            'query': 'thb',
+            'filters': {
+                'amount': '1000..2000',
+                'captured': 'true'
             }
         })
         <Search at 0x1029e57f0>
