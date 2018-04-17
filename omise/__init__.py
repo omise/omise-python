@@ -49,6 +49,21 @@ __all__ = [
 ]
 
 
+def _deprecation_message_for_retrieve_method():
+    """
+    This method is just temporary method for warning our customer about we are
+    going to deprecate retrieve() and use list() instead
+    """
+    import warnings
+    warnings.simplefilter('always', DeprecationWarning)
+
+    warnings.warn(
+        "retrieve() method is going to be deprecated since version 1.x.x "
+        "after list() method has been introduced",
+        DeprecationWarning
+    )
+
+
 def _get_class_for(type):
     """Returns a :type:`class` corresponding to :param:`type`.
 
@@ -232,6 +247,8 @@ class Account(_MainResource, Base):
 
     @classmethod
     def retrieve(cls):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the account details associated with the API key.
 
         :rtype: Account
@@ -268,6 +285,8 @@ class Balance(_MainResource, Base):
 
     @classmethod
     def retrieve(cls):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the balance details for current account.
 
         :rtype: Balance
@@ -377,6 +396,8 @@ class Token(_VaultResource, Base):
 
     @classmethod
     def retrieve(cls, token_id):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the token details for the given :param:`token_id`.
 
         :param token_id: a token id to retrieve.
@@ -541,6 +562,8 @@ class Charge(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, charge_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the charge details for the given :param:`charge_id`.
 
         :param charge_id: a charge id to retrieve.
@@ -647,6 +670,8 @@ class Collection(Base):
         return _as_object(self._attributes['data'][item])
 
     def retrieve(self, object_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the specific :param:`object_id` from the list of objects.
 
         If no :param:`object_id` is given, a list of all objects will be
@@ -720,6 +745,8 @@ class Customer(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, customer_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the customer details for the given :param:`customer_id`.
 
         :param customer_id: a customer id to retrieve.
@@ -839,6 +866,8 @@ class Dispute(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, *args, **kwargs):
+        _deprecation_message_for_retrieve_method()
+
         if len(args) > 0:
             return _as_object(cls._request('get', cls._instance_path(args[0])))
         elif 'status' in kwargs:
@@ -910,6 +939,8 @@ class Event(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, event_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the event details for the given :param:`event_id`.
         If :param:`event_id` is not given, all events will be returned
         instead.
@@ -950,6 +981,8 @@ class Forex(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, currency):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the exchange rate for the given :param:`currency`.
 
         :param currency: a currency to exchange.
@@ -1015,6 +1048,8 @@ class Link(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, link_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the link details for the given :param:`link_id`.
 
         :param link_id: a link id to retrieve.
@@ -1056,6 +1091,8 @@ class Occurrence(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, occurrence_id):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the occurrence details for the given :param:`occurrence_id`.
 
         :param occurrence_id: a occurrence id to retrieve.
@@ -1078,6 +1115,8 @@ class Receipt(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, receipt_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the receipt details for the given :param:`receipt_id`.
 
         :param receipt_id: a receipt id to retrieve.
@@ -1152,6 +1191,8 @@ class Recipient(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, recipient_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the recipient details for the given :param:`recipient_id`.
         If :param:`recipient_id` is not given, all recipients will be returned
         instead.
@@ -1375,6 +1416,8 @@ class Schedule(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, schedule_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the schedule object for the given :param:`schedule_id`.
         If :param:`schedule_id` is not given, all schedules will be returned
         instead.
@@ -1536,6 +1579,8 @@ class Transfer(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, transfer_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the transfer details for the given :param:`transfer_id`.
         If :param:`transfer_id` is not given, all transfers will be returned
         instead.
@@ -1649,6 +1694,8 @@ class Transaction(_MainResource, Base):
 
     @classmethod
     def retrieve(cls, transaction_id=None):
+        _deprecation_message_for_retrieve_method()
+
         """Retrieve the transaction details for the given
         :param:`transaction_id`. If :param:`transaction_id` is not given, all
         transactions will be returned instead.
