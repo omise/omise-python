@@ -553,6 +553,10 @@ class Charge(_MainResource, Base):
                              cls._instance_path(charge_id)))
         return _as_object(cls._request('get', cls._collection_path()))
 
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls)
+
     def reload(self):
         """Reload the charge details.
 
@@ -686,6 +690,10 @@ class Customer(_MainResource, Base):
         return 'customers'
 
     @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
+
+    @classmethod
     def _instance_path(cls, customer_id):
         return ('customers', customer_id)
 
@@ -809,6 +817,72 @@ class Customer(_MainResource, Base):
         path = self._instance_path(self._attributes['id']) + ('schedules',)
         schedules = _as_object(self._request('get', path))
         return schedules
+
+
+class LazyCollection():
+    def __init__(self, collection_path):
+        self.collection_path = collection_path
+        self._exhausted = False
+
+    def __iter__(self):
+        self._reset_listing()
+        return self
+
+    def __next__(self):
+        if self.listing is None or self._list_index + 1 > len(self.listing):
+            if self._exhausted:
+                raise StopIteration
+            self._next_batch()
+
+        self._list_index += 1
+        return _as_object(self.listing[self._list_index - 1])
+
+    def __len__(self):
+        obj = self._fetch_objects(limit=1, offset=0)
+
+        return obj["total"]
+
+    def _next_batch(self, limit=100):
+        offset = self._list_index
+
+        obj = self._fetch_objects(limit=limit, offset=offset)
+        data = obj["data"]
+
+        if len(data) > 0:
+            self._add_to_listing(data)
+
+            if len(data) < limit:
+                self._exhausted = True
+        else:
+            raise StopIteration
+
+    def _reset_listing(self):
+        self._list_index = 0
+        self.listing = None
+        self._exhausted = False
+
+    def _add_to_listing(self, data):
+        if self.listing:
+            self.listing.append(data)
+        else:
+            self.listing = data
+
+    def offset(self, **kwargs):
+        limit = kwargs["limit"]
+        offset = kwargs["offset"]
+        order = kwargs.pop('order', None)
+
+        obj = self._fetch_objects(limit=limit, offset= offset, order=order)
+        data = obj["data"]
+
+        return [_as_object(i) for i in data]
+
+    def _fetch_objects(self, **kwargs):
+        order = kwargs.pop('order', None)
+        return Request(api_secret, api_main, api_version).send(
+            'get',
+            self.collection_path,
+            payload={'limit': kwargs['limit'], 'offset': kwargs['offset'], 'order': order})
 
 
 class Dispute(_MainResource, Base):
