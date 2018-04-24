@@ -1,5 +1,6 @@
 import copy
 import sys
+import pdb
 
 from .request import Request
 
@@ -200,6 +201,9 @@ class _MainResource(Base):
     @classmethod
     def _request(cls, *args, **kwargs):
         return Request(api_secret, api_main, api_version).send(*args, **kwargs)
+
+    def _association_path(self, association_cls):
+        return (self.__class__._collection_path(), self.id, association_cls._collection_path())
 
 
 class _VaultResource(Base):
@@ -555,7 +559,7 @@ class Charge(_MainResource, Base):
 
     @classmethod
     def list(cls):
-        return LazyCollection(cls)
+        return LazyCollection(cls._collection_path())
 
     def reload(self):
         """Reload the charge details.
@@ -622,6 +626,9 @@ class Charge(_MainResource, Base):
         refund = _as_object(self._request('post', path, kwargs))
         self.reload()
         return refund
+
+    def list_refunds(self):
+        return LazyCollection(self._association_path(Refund))
 
     @classmethod
     def schedule(cls):
@@ -798,6 +805,9 @@ class Customer(_MainResource, Base):
             self._request('delete',
                           self._instance_path(self._attributes['id'])))
 
+    def list_schedules(self):
+        return LazyCollection(self._association_path(Schedule))
+
     @property
     def destroyed(self):
         """Returns ``True`` if customer has been deleted.
@@ -921,6 +931,22 @@ class Dispute(_MainResource, Base):
                              cls._collection_path(kwargs['status'])))
         return _as_object(cls._request('get', cls._collection_path()))
 
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
+
+    @classmethod
+    def list_open_disputes(cls):
+        return LazyCollection(cls._collection_path("open"))
+
+    @classmethod
+    def list_pending_disputes(cls):
+        return LazyCollection(cls._collection_path("pending"))
+
+    @classmethod
+    def list_closed_disputes(cls):
+        return LazyCollection(cls._collection_path("closed"))
+
     def reload(self):
         """Reload the dispute details.
 
@@ -995,6 +1021,10 @@ class Event(_MainResource, Base):
         if event_id:
             return _as_object(cls._request('get', cls._instance_path(event_id)))
         return _as_object(cls._request('get', cls._collection_path()))
+
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
 
     def reload(self):
         """Reload the event details.
@@ -1101,6 +1131,10 @@ class Link(_MainResource, Base):
                              cls._instance_path(link_id)))
         return _as_object(cls._request('get', cls._collection_path()))
 
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
+
     def reload(self):
         """Reload the link details.
 
@@ -1163,6 +1197,10 @@ class Receipt(_MainResource, Base):
                 cls._request('get',
                              cls._instance_path(receipt_id)))
         return _as_object(cls._request('get', cls._collection_path()))
+
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
 
 
 class Recipient(_MainResource, Base):
@@ -1238,6 +1276,10 @@ class Recipient(_MainResource, Base):
             return _as_object(cls._request('get',
                                            cls._instance_path(recipient_id)))
         return _as_object(cls._request('get', cls._collection_path()))
+
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
 
     def reload(self):
         """Reload the recipient details.
@@ -1327,6 +1369,14 @@ class Refund(_MainResource, Base):
         >>> refund.amount
         10000
     """
+
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
+
+    @classmethod
+    def _collection_path(cls):
+        return 'refunds'
 
     def reload(self):
         """Reload the refund details.
@@ -1463,6 +1513,10 @@ class Schedule(_MainResource, Base):
                              cls._instance_path(schedule_id)))
 
         return _as_object(cls._request('get', cls._collection_path()))
+
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
 
     def reload(self):
         """Reload the schedule details.
@@ -1625,6 +1679,10 @@ class Transfer(_MainResource, Base):
                              cls._instance_path(transfer_id)))
         return _as_object(cls._request('get', cls._collection_path()))
 
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
+
     def reload(self):
         """Reload the transfer details.
 
@@ -1737,6 +1795,10 @@ class Transaction(_MainResource, Base):
                 cls._request('get',
                              cls._instance_path(transaction_id)))
         return _as_object(cls._request('get', cls._collection_path()))
+
+    @classmethod
+    def list(cls):
+        return LazyCollection(cls._collection_path())
 
     def reload(self):
         """Reload the transaction details.
