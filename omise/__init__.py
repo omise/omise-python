@@ -202,7 +202,7 @@ class _MainResource(Base):
     def _request(cls, *args, **kwargs):
         return Request(api_secret, api_main, api_version).send(*args, **kwargs)
 
-    def _association_path(self, association_cls):
+    def _nested_object_path(self, association_cls):
         return (self.__class__._collection_path(), self.id, association_cls._collection_path())
 
 
@@ -559,6 +559,10 @@ class Charge(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all charges that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
@@ -628,7 +632,11 @@ class Charge(_MainResource, Base):
         return refund
 
     def list_refunds(self):
-        return LazyCollection(self._association_path(Refund))
+        """Return all refund that belongs to the charge
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(self._nested_object_path(Refund))
 
     @classmethod
     def schedule(cls):
@@ -698,6 +706,10 @@ class Customer(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all customers that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     @classmethod
@@ -806,7 +818,11 @@ class Customer(_MainResource, Base):
                           self._instance_path(self._attributes['id'])))
 
     def list_schedules(self):
-        return LazyCollection(self._association_path(Schedule))
+        """Returns all charge schedules that belong to a given customer.
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(self._nested_object_path(Schedule))
 
     @property
     def destroyed(self):
@@ -933,18 +949,34 @@ class Dispute(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all disputes that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     @classmethod
     def list_open_disputes(cls):
+        """Return all open disputes that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path("open"))
 
     @classmethod
     def list_pending_disputes(cls):
+        """Return all pending disputes that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path("pending"))
 
     @classmethod
     def list_closed_disputes(cls):
+        """Return all closed disputes that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path("closed"))
 
     def reload(self):
@@ -1024,6 +1056,10 @@ class Event(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all events that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
@@ -1133,6 +1169,10 @@ class Link(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all links that belongs to your account.
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
@@ -1200,6 +1240,10 @@ class Receipt(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all receipts that belongs to your account.
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
 
@@ -1279,6 +1323,10 @@ class Recipient(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all recipients that belongs to your account
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
@@ -1372,6 +1420,10 @@ class Refund(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all refunds that belongs to your account.
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     @classmethod
@@ -1516,6 +1568,10 @@ class Schedule(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Returns all schedules that belongs to your account.
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
@@ -1681,6 +1737,10 @@ class Transfer(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all transfers that belongs to your account.
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
@@ -1798,6 +1858,10 @@ class Transaction(_MainResource, Base):
 
     @classmethod
     def list(cls):
+        """Return all transactions that belongs to your account.
+
+        :rtype: LazyCollection
+        """
         return LazyCollection(cls._collection_path())
 
     def reload(self):
