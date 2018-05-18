@@ -1425,7 +1425,8 @@ class Schedule(_MainResource, Base):
 
         :rtype: bool
         """
-        return self._attributes.get('deleted', False)
+        status = self._attributes.get('status')
+        return True if status == 'deleted' else False
 
     def occurrence(self):
         """Retrieve all occurrences for a given schedule.
