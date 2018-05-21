@@ -1,3 +1,9 @@
+## [0.8.1] - 2018-05-21
+
+This version fixes Schedule API getting wrong response when it destroyed.
+
+* [Fixed] Schedule API return proper response when it destroyed.
+
 ## [0.8.0] - 2018-01-11
 
 This version adds support for Receipt API, and Source API.
