@@ -1,6 +1,5 @@
 import copy
 import sys
-import pdb
 
 from .request import Request
 
@@ -64,7 +63,6 @@ def _get_class_for(type):
         'account': Account,
         'balance': Balance,
         'bank_account': BankAccount,
-        'token': Token,
         'card': Card,
         'charge': Charge,
         'customer': Customer,
@@ -72,16 +70,17 @@ def _get_class_for(type):
         'event': Event,
         'forex': Forex,
         'link': Link,
+        'list': Collection,
         'occurrence': Occurrence,
         'receipt': Receipt,
         'recipient': Recipient,
         'refund': Refund,
-        'search': Search,
         'schedule': Schedule,
+        'search': Search,
         'source': Source,
+        'token': Token,
         'transfer': Transfer,
         'transaction': Transaction,
-        'list': Collection,
     }.get(type)
 
 
@@ -203,7 +202,10 @@ class _MainResource(Base):
         return Request(api_secret, api_main, api_version).send(*args, **kwargs)
 
     def _nested_object_path(self, association_cls):
-        return (self.__class__._collection_path(), self.id, association_cls._collection_path())
+        return (
+            self.__class__._collection_path(),
+            self.id, association_cls._collection_path()
+        )
 
 
 class _VaultResource(Base):
@@ -416,6 +418,11 @@ class Card(_MainResource, Base):
         >>> card.last_digits
         '4242'
     """
+
+
+    @classmethod
+    def _collection_path(cls):
+        return 'cards'
 
     def reload(self):
         """Reload the card details.
@@ -817,6 +824,13 @@ class Customer(_MainResource, Base):
             self._request('delete',
                           self._instance_path(self._attributes['id'])))
 
+    def list_cards(self):
+        """Returns all cards that belong to a given customer.
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(self._nested_object_path(Card))
+
     def list_schedules(self):
         """Returns all charge schedules that belong to a given customer.
 
@@ -845,70 +859,74 @@ class Customer(_MainResource, Base):
         return schedules
 
 
-class LazyCollection():
+class LazyCollection(object):
+    """Proxy class representing a lazy collection of items."""
     def __init__(self, collection_path):
         self.collection_path = collection_path
         self._exhausted = False
 
+    def __len__(self):
+        return self._fetch_objects(limit=1, offset=0)['total']
+
     def __iter__(self):
-        self._reset_listing()
+        self.limit = 100
+        self.listing = []
+
+        self._list_index = 0
+
         return self
 
     def __next__(self):
-        if self.listing is None or self._list_index + 1 > len(self.listing):
-            if self._exhausted:
-                raise StopIteration
-            self._next_batch()
+        if (self.listing is None) or (self._list_index + 1 > len(self.listing)):
+            self._next_batch(limit=self.limit, offset=self._list_index)
 
         self._list_index += 1
         return _as_object(self.listing[self._list_index - 1])
 
-    def __len__(self):
-        obj = self._fetch_objects(limit=1, offset=0)
+    def next(self):
+        return self.__next__()
 
-        return obj["total"]
+    def offset(self, **kwargs):
+        limit = kwargs.pop('limit', 20)
+        offset = kwargs.pop('offset', 0)
+        order = kwargs.pop('order', None)
 
-    def _next_batch(self, limit=100):
-        offset = self._list_index
+        obj = self._fetch_objects(limit=limit, offset=offset, order=order)
+        data = obj['data']
 
-        obj = self._fetch_objects(limit=limit, offset=offset)
-        data = obj["data"]
+        return [_as_object(item) for item in data]
+
+    def _next_batch(self, **kwargs):
+        if self._exhausted:
+            raise StopIteration
+
+        obj = self._fetch_objects(limit=kwargs['limit'], offset=kwargs['offset'])
+        data = obj['data']
 
         if len(data) > 0:
             self._add_to_listing(data)
-
-            if len(data) < limit:
-                self._exhausted = True
         else:
             raise StopIteration
 
-    def _reset_listing(self):
-        self._list_index = 0
-        self.listing = None
-        self._exhausted = False
-
     def _add_to_listing(self, data):
-        if self.listing:
-            self.listing.append(data)
-        else:
-            self.listing = data
+        for item in data:
+            self.listing.append(item)
 
-    def offset(self, **kwargs):
-        limit = kwargs["limit"]
-        offset = kwargs["offset"]
-        order = kwargs.pop('order', None)
-
-        obj = self._fetch_objects(limit=limit, offset= offset, order=order)
-        data = obj["data"]
-
-        return [_as_object(i) for i in data]
+        if len(data) < self.limit:
+            self._exhausted = True
 
     def _fetch_objects(self, **kwargs):
         order = kwargs.pop('order', None)
+
         return Request(api_secret, api_main, api_version).send(
             'get',
             self.collection_path,
-            payload={'limit': kwargs['limit'], 'offset': kwargs['offset'], 'order': order})
+            payload={
+                'limit': kwargs['limit'],
+                'offset': kwargs['offset'],
+                'order': order
+            }
+        )
 
 
 class Dispute(_MainResource, Base):
@@ -1610,7 +1628,7 @@ class Schedule(_MainResource, Base):
         :rtype: bool
         """
         status = self._attributes.get('status')
-        return True if status == 'deleted' else False
+        return status == 'deleted'
 
     def occurrence(self):
         """Retrieve all occurrences for a given schedule.
