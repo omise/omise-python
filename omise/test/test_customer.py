@@ -365,7 +365,7 @@ class CustomerTest(_ResourceMixin, unittest.TestCase):
         self.assertRequest(api_call, 'https://api.omise.co/customers/cust_test')
 
     @mock.patch('requests.get')
-    def test_schedule(self, api_call):
+    def test_schedules(self, api_call):
         customer = self._makeOne()
         class_ = self._getTargetClass()
         collection_class_ = self._getCollectionClass()
@@ -432,7 +432,7 @@ class CustomerTest(_ResourceMixin, unittest.TestCase):
 
         self.assertTrue(isinstance(customer, class_))
 
-        schedules = customer.schedule()
+        schedules = customer.schedules()
         self.assertTrue(isinstance(schedules, collection_class_))
         self.assertEqual(schedules.total, 1)
         self.assertEqual(schedules.location, '/customers/cust_test/schedules')

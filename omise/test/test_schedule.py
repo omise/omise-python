@@ -447,7 +447,7 @@ class ScheduleTest(_ResourceMixin, unittest.TestCase):
 
         self.assertTrue(isinstance(schedule, class_))
 
-        occurrences = schedule.occurrence()
+        occurrences = schedule.occurrences()
         self.assertTrue(isinstance(occurrences, collection_class_))
         self.assertEqual(occurrences.total, 1)
         self.assertEqual(occurrences[0].id, 'occu_test')

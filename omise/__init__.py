@@ -845,7 +845,7 @@ class Customer(_MainResource, Base):
         """
         return self._attributes.get('deleted', False)
 
-    def schedule(self):
+    def schedules(self):
         """Retrieve all charge schedules that belong to customer.
 
         :rtype: Schedule
@@ -1629,7 +1629,7 @@ class Schedule(_MainResource, Base):
         status = self._attributes.get('status')
         return status == 'deleted'
 
-    def occurrence(self):
+    def occurrences(self):
         """Retrieve all occurrences for a given schedule.
 
         :rtype: Occurrence
