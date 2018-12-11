@@ -419,7 +419,6 @@ class Card(_MainResource, Base):
         '4242'
     """
 
-
     @classmethod
     def _collection_path(cls):
         return 'cards'
