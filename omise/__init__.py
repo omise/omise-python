@@ -199,7 +199,12 @@ class _MainResource(Base):
 
     @classmethod
     def _request(cls, *args, **kwargs):
-        return Request(api_secret, api_main, api_version).send(*args, **kwargs)
+        api_key = api_public
+
+        if cls._collection_path() == 'sources' and api_secret:
+            api_key = api_secret
+
+        return Request(api_key, api_main, api_version).send(*args, **kwargs)
 
     def _nested_object_path(self, association_cls):
         return (
@@ -1680,10 +1685,15 @@ class Source(_MainResource, Base):
     """
 
     @classmethod
+    def _collection_path(cls):
+        return 'sources'
+
+    @classmethod
     def create(cls, **kwargs):
         return _as_object(
             cls._request('post',
-                         'sources', kwargs))
+                         cls._collection_path(),
+                         kwargs))
 
 
 class Transfer(_MainResource, Base):
