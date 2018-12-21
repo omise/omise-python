@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class OccurrenceTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Occurrence
+        from omise import Occurrence
         return Occurrence
 
     @mock.patch('requests.get')

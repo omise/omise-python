@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class ScheduleTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Schedule
+        from omise import Schedule
         return Schedule
 
     def _getCollectionClass(self):

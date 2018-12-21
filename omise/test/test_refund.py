@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class RefundTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Refund
+        from omise import Refund
         return Refund
 
     def _makeOne(self):

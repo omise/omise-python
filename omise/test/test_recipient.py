@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class RecipientTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Recipient
+        from omise import Recipient
         return Recipient
 
     def _getCollectionClass(self):
@@ -15,7 +15,7 @@ class RecipientTest(_ResourceMixin, unittest.TestCase):
         return Collection
 
     def _getBankAccountClass(self):
-        from .. import BankAccount
+        from omise import BankAccount
         return BankAccount
 
     def _makeOne(self):

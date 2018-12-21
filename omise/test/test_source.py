@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class SourceTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Source
+        from omise import Source
         return Source
 
     def _makeOne(self):

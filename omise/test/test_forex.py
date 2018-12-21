@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class ForexTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Forex
+        from omise import Forex
         return Forex
 
     @mock.patch('requests.get')

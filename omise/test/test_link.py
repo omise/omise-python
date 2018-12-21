@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class LinkTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Link
+        from omise import Link
         return Link
 
     def _getCollectionClass(self):

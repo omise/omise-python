@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class ReceiptTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Receipt
+        from omise import Receipt
         return Receipt
 
     def _getCollectionClass(self):

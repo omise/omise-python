@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class TransactionTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Transaction
+        from omise import Transaction
         return Transaction
 
     def _getCollectionClass(self):

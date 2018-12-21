@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class TokenTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Token
+        from omise import Token
         return Token
 
     def _getCardClass(self):

@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class TransferTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Transfer
+        from omise import Transfer
         return Transfer
 
     def _getCollectionClass(self):

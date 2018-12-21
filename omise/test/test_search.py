@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class SearchTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Search
+        from omise import Search
         return Search
 
     @mock.patch('requests.get')

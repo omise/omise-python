@@ -15,7 +15,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         return Card
 
     def _getSourceClass(self):
-        from .. import Source
+        from omise import Source
         return Source
 
     def _getCollectionClass(self):
