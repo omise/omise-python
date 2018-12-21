@@ -1,7 +1,8 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Transfer(_MainResource, Base):
+class Transfer(MainResource, Base):
     """API class representing a transfer.
 
     This API class is used for retrieving a transfer information and create
@@ -46,7 +47,7 @@ class Transfer(_MainResource, Base):
         :param \*\*kwargs: arguments to create a transfer.
         :rtype: Transfer
         """
-        return _as_object(
+        return as_object(
             cls._request('post',
                          cls._collection_path(),
                          kwargs))
@@ -62,16 +63,16 @@ class Transfer(_MainResource, Base):
         :rtype: Transfer
         """
         if transfer_id:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._instance_path(transfer_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Return all transfers that belongs to your account.
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 

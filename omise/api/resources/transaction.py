@@ -1,7 +1,8 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Transaction(_MainResource, Base):
+class Transaction(MainResource, Base):
     """API class representing a transaction.
 
     This API class is used for retrieving a transaction information for
@@ -37,16 +38,16 @@ class Transaction(_MainResource, Base):
         :rtype: Transaction
         """
         if transaction_id:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._instance_path(transaction_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Return all transactions that belongs to your account.
 
-        :rtype: omise.LazyCollection
+        :rtype: omise.api.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 

@@ -1,4 +1,4 @@
-from omise import Base, _as_object
+from omise.api import *
 
 
 class Collection(Base):
@@ -9,10 +9,10 @@ class Collection(Base):
 
     def __iter__(self):
         for obj in self._attributes['data']:
-            yield _as_object(obj)
+            yield as_object(obj)
 
     def __getitem__(self, item):
-        return _as_object(self._attributes['data'][item])
+        return as_object(self._attributes['data'][item])
 
     def retrieve(self, object_id=None):
         """Retrieve the specific :param:`object_id` from the list of objects.
@@ -29,4 +29,4 @@ class Collection(Base):
         else:
             for obj in self._attributes['data']:
                 if obj['id'] == object_id:
-                    return _as_object(obj)
+                    return as_object(obj)

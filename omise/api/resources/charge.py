@@ -1,9 +1,8 @@
-import copy
+from omise.api import *
+from omise.api.resources import *
 
-from omise import Base, _as_object, LazyCollection, _MainResource
 
-
-class Charge(_MainResource, Base):
+class Charge(MainResource, Base):
     """API class representing a charge.
 
     This API class is used for retrieving and creating a charge to the
@@ -54,7 +53,7 @@ class Charge(_MainResource, Base):
         :param \*\*kwargs: arguments to create a charge.
         :rtype: Charge
         """
-        return _as_object(
+        return as_object(
             cls._request('post',
                          cls._collection_path(),
                          kwargs))
@@ -68,16 +67,16 @@ class Charge(_MainResource, Base):
         :rtype: Charge
         """
         if charge_id:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._instance_path(charge_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Return all charges that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 
@@ -143,14 +142,14 @@ class Charge(_MainResource, Base):
         .. _create a refund: https://docs.omise.co/api/refunds/#create-a-refund
         """
         path = self._instance_path(self._attributes['id']) + ('refunds',)
-        refund = _as_object(self._request('post', path, kwargs))
+        refund = as_object(self._request('post', path, kwargs))
         self.reload()
         return refund
 
     def list_refunds(self):
         """Return all refund that belongs to the charge
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(self._nested_object_path(Refund))
 
@@ -163,6 +162,6 @@ class Charge(_MainResource, Base):
         .. _retrieve all charge schedules:
         https://docs.omise.co/charge-schedules-api
         """
-        return _as_object(
+        return as_object(
             cls._request('get',
                          ('charges', 'schedules',)))

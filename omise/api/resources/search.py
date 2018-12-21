@@ -1,7 +1,8 @@
-from omise import Base, _as_object, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Search(_MainResource, Base):
+class Search(MainResource, Base):
     """API class for searching.
 
     This API class is used for retrieving results from your account.
@@ -29,10 +30,10 @@ class Search(_MainResource, Base):
 
     def __iter__(self):
         for obj in self._attributes['data']:
-            yield _as_object(obj)
+            yield as_object(obj)
 
     def __getitem__(self, item):
-        return _as_object(self._attributes['data'][item])
+        return as_object(self._attributes['data'][item])
 
     @classmethod
     def execute(cls, scope, **options):
@@ -45,6 +46,6 @@ class Search(_MainResource, Base):
             else:
                 querystring.append('%s=%s' % (key, val))
 
-        return _as_object(
+        return as_object(
             cls._request('get',
                          ('search', '&'.join(querystring))))

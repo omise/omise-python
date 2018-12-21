@@ -1,7 +1,8 @@
-from omise import Base, _as_object, Card, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Customer(_MainResource, Base):
+class Customer(MainResource, Base):
     """API class representing a customer in an account.
 
     This API class is used for retrieving and creating a customer in an
@@ -26,7 +27,7 @@ class Customer(_MainResource, Base):
     def list(cls):
         """Return all customers that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 
@@ -58,7 +59,7 @@ class Customer(_MainResource, Base):
         :param \*\*kwargs: arguments to create a customer.
         :rtype: Customer
         """
-        return _as_object(
+        return as_object(
             cls._request('post',
                          cls._collection_path(),
                          kwargs))
@@ -72,10 +73,10 @@ class Customer(_MainResource, Base):
         :rtype: Customer
         """
         if customer_id:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._instance_path(customer_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     def reload(self):
         """Reload the customer details.
@@ -138,14 +139,14 @@ class Customer(_MainResource, Base):
     def list_cards(self):
         """Returns all cards that belong to a given customer.
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(self._nested_object_path(Card))
 
     def list_schedules(self):
         """Returns all charge schedules that belong to a given customer.
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(self._nested_object_path(Schedule))
 
@@ -166,5 +167,5 @@ class Customer(_MainResource, Base):
         https://docs.omise.co/charge-schedules-api
         """
         path = self._instance_path(self._attributes['id']) + ('schedules',)
-        schedules = _as_object(self._request('get', path))
+        schedules = as_object(self._request('get', path))
         return schedules

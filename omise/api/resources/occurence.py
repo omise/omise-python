@@ -1,7 +1,8 @@
-from omise import Base, _as_object, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Occurrence(_MainResource, Base):
+class Occurrence(MainResource, Base):
     """API class representing occurrence information.
 
     This API class is used for retrieving a individual occurrence.
@@ -26,6 +27,6 @@ class Occurrence(_MainResource, Base):
         :type occurrence_id: str
         :rtype: Occurrence
         """
-        return _as_object(
+        return as_object(
             cls._request('get',
                          cls._instance_path(occurrence_id)))

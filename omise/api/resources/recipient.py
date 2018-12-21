@@ -1,7 +1,8 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Recipient(_MainResource, Base):
+class Recipient(MainResource, Base):
     """API class representing a recipient in an account.
 
     This API class is used for retrieving and creating a recipient in an
@@ -55,7 +56,7 @@ class Recipient(_MainResource, Base):
         :param \*\*kwargs: arguments to create a recipient.
         :rtype: Recipient
         """
-        return _as_object(
+        return as_object(
             cls._request('post',
                          cls._collection_path(),
                          kwargs))
@@ -71,15 +72,15 @@ class Recipient(_MainResource, Base):
         :rtype: Recipient
         """
         if recipient_id:
-            return _as_object(cls._request('get',
+            return as_object(cls._request('get',
                                            cls._instance_path(recipient_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Return all recipients that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 

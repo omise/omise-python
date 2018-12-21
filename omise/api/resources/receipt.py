@@ -1,7 +1,8 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Receipt(_MainResource, Base):
+class Receipt(MainResource, Base):
     @classmethod
     def _collection_path(cls):
         return 'receipts'
@@ -19,10 +20,10 @@ class Receipt(_MainResource, Base):
         :rtype: Receipt
         """
         if receipt_id:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._instance_path(receipt_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):

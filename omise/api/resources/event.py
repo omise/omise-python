@@ -1,7 +1,8 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Event(_MainResource, Base):
+class Event(MainResource, Base):
     """API class representing an event in an account.
 
     This API class is used for retrieving an event in an
@@ -36,14 +37,14 @@ class Event(_MainResource, Base):
         :rtype: Event
         """
         if event_id:
-            return _as_object(cls._request('get', cls._instance_path(event_id)))
-        return _as_object(cls._request('get', cls._collection_path()))
+            return as_object(cls._request('get', cls._instance_path(event_id)))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Return all events that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 

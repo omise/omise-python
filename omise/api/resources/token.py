@@ -1,7 +1,8 @@
-from omise import Base, _as_object, _VaultResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Token(_VaultResource, Base):
+class Token(VaultResource, Base):
     """API class for creating and retrieving credit card token with the API.
 
     Credit card tokens are a unique ID that represents a card that could
@@ -63,7 +64,7 @@ class Token(_VaultResource, Base):
         :rtype: Token
         """
         transformed_args = dict(card=kwargs)
-        return _as_object(
+        return as_object(
             cls._request('post',
                          cls._collection_path(),
                          transformed_args))
@@ -76,7 +77,7 @@ class Token(_VaultResource, Base):
         :type token_id: str
         :rtype: Token
         """
-        return _as_object(cls._request('get', cls._instance_path(token_id)))
+        return as_object(cls._request('get', cls._instance_path(token_id)))
 
     def reload(self):
         """Reload the token details.

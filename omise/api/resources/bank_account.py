@@ -1,4 +1,4 @@
-from omise import Base
+from omise.api import *
 
 
 class BankAccount(Base):

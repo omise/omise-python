@@ -1,7 +1,9 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources.lazy_collection import LazyCollection
+from omise.api.resources.main_resource import MainResource
 
 
-class Dispute(_MainResource, Base):
+class Dispute(MainResource, Base):
     """API class representing a recipient in an account.
 
     This API class is used for retrieving and updating a dispute in an
@@ -30,18 +32,18 @@ class Dispute(_MainResource, Base):
     @classmethod
     def retrieve(cls, *args, **kwargs):
         if len(args) > 0:
-            return _as_object(cls._request('get', cls._instance_path(args[0])))
+            return as_object(cls._request('get', cls._instance_path(args[0])))
         elif 'status' in kwargs:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._collection_path(kwargs['status'])))
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Return all disputes that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 
@@ -49,7 +51,7 @@ class Dispute(_MainResource, Base):
     def list_open_disputes(cls):
         """Return all open disputes that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path("open"))
 
@@ -57,7 +59,7 @@ class Dispute(_MainResource, Base):
     def list_pending_disputes(cls):
         """Return all pending disputes that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path("pending"))
 
@@ -65,7 +67,7 @@ class Dispute(_MainResource, Base):
     def list_closed_disputes(cls):
         """Return all closed disputes that belongs to your account
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path("closed"))
 

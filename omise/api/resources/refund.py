@@ -1,7 +1,8 @@
-from omise import Base, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Refund(_MainResource, Base):
+class Refund(MainResource, Base):
     """API class representing refund information.
 
     This API class represents a refund information returned from the refund API.
@@ -23,7 +24,7 @@ class Refund(_MainResource, Base):
     def list(cls):
         """Return all refunds that belongs to your account.
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 

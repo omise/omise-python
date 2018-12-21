@@ -1,7 +1,8 @@
-from omise import Base, _as_object, LazyCollection, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Schedule(_MainResource, Base):
+class Schedule(MainResource, Base):
     """API class representing schedule information.
 
     This API class is used for retrieving or creating or deleting a scheduled
@@ -56,7 +57,7 @@ class Schedule(_MainResource, Base):
         :param \*\*kwargs: arguments to create a schedule.
         :rtype: Schedule
         """
-        return _as_object(
+        return as_object(
             cls._request('post',
                          cls._collection_path(),
                          kwargs))
@@ -72,17 +73,17 @@ class Schedule(_MainResource, Base):
         :rtype: Schedule
         """
         if schedule_id:
-            return _as_object(
+            return as_object(
                 cls._request('get',
                              cls._instance_path(schedule_id)))
 
-        return _as_object(cls._request('get', cls._collection_path()))
+        return as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
     def list(cls):
         """Returns all schedules that belongs to your account.
 
-        :rtype: LazyCollection
+        :rtype: omise.api.resources.lazy_collection.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 
@@ -132,5 +133,5 @@ class Schedule(_MainResource, Base):
         https://docs.omise.co/occurrences-api
         """
         path = self._instance_path(self._attributes['id']) + ('occurrences',)
-        occurrences = _as_object(self._request('get', path))
+        occurrences = as_object(self._request('get', path))
         return occurrences

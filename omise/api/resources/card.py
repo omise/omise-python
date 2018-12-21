@@ -1,7 +1,8 @@
-from omise import Base, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Card(_MainResource, Base):
+class Card(MainResource, Base):
     """API class representing card details.
 
     This API class represents a card information returned from other APIs.

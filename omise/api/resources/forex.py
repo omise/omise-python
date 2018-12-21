@@ -1,7 +1,8 @@
-from omise import Base, _as_object, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Forex(_MainResource, Base):
+class Forex(MainResource, Base):
     """API class retrieves the currency exchange.
 
     The Forex API retrieves the currency exchange rate used in
@@ -25,5 +26,5 @@ class Forex(_MainResource, Base):
         :type currency: str
         :rtype: Forex
         """
-        return _as_object(
+        return as_object(
             cls._request('get', ('forex', currency)))

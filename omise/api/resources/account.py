@@ -1,7 +1,8 @@
-from omise import Base, _as_object, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Account(_MainResource, Base):
+class Account(MainResource, Base):
     """API class representing accounts details.
 
     This API class is used for retrieving account information such as creator
@@ -28,7 +29,7 @@ class Account(_MainResource, Base):
 
         :rtype: Account
         """
-        return _as_object(cls._request('get', cls._instance_path()))
+        return as_object(cls._request('get', cls._instance_path()))
 
     def reload(self):
         """Reload the account details.

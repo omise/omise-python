@@ -1,7 +1,8 @@
-from omise import Base, _as_object, _MainResource
+from omise.api import *
+from omise.api.resources import *
 
 
-class Source(_MainResource, Base):
+class Source(MainResource, Base):
     """API class for creating Source.
 
     This API class is used for creating a source which are enabled to the
@@ -41,6 +42,6 @@ class Source(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        return _as_object(
+        return as_object(
             cls._request('post',
                          'sources', kwargs))
