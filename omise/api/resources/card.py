@@ -1,3 +1,4 @@
+import copy
 from omise.api import *
 from omise.api.resources import *
 

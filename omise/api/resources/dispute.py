@@ -1,6 +1,6 @@
+import copy
 from omise.api import *
-from omise.api.resources.lazy_collection import LazyCollection
-from omise.api.resources.main_resource import MainResource
+from omise.api.resources import *
 
 
 class Dispute(MainResource, Base):
