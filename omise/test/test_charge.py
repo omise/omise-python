@@ -7,11 +7,11 @@ from .helper import _ResourceMixin
 class ChargeTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Charge
+        from omise import Charge
         return Charge
 
     def _getCardClass(self):
-        from .. import Card
+        from omise import Card
         return Card
 
     def _getSourceClass(self):

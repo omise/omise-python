@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class BalanceTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Balance
+        from omise import Balance
         return Balance
 
     @mock.patch('requests.get')

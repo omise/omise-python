@@ -6,7 +6,7 @@ from .helper import _ResourceMixin
 
 class EventTest(_ResourceMixin, unittest.TestCase):
     def _getTargetClass(self):
-        from .. import Event
+        from omise import Event
         return Event
 
     def _getCollectionClass(self):
@@ -14,11 +14,11 @@ class EventTest(_ResourceMixin, unittest.TestCase):
         return Collection
 
     def _getChargeClass(self):
-        from .. import Charge
+        from omise import Charge
         return Charge
 
     def _getCardClass(self):
-        from .. import Card
+        from omise import Card
         return Card
 
     @mock.patch('requests.get')

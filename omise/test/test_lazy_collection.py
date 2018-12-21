@@ -11,7 +11,7 @@ class LazyCollectionTest(_ResourceMixin, unittest.TestCase):
         return LazyCollection
 
     def _getCustomerClass(self):
-        from .. import Customer
+        from omise import Customer
         return Customer
 
     def _makeOne(self):

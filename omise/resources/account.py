@@ -1,4 +1,5 @@
-from omise import _MainResource, Base, _as_object
+from omise import Base, _as_object
+from .main_resource import _MainResource
 
 
 class Account(_MainResource, Base):

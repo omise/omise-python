@@ -7,11 +7,11 @@ from .helper import _ResourceMixin
 class CustomerTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Customer
+        from omise import Customer
         return Customer
 
     def _getCardClass(self):
-        from .. import Card
+        from omise import Card
         return Card
 
     def _getCollectionClass(self):

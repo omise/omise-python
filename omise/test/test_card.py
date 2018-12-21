@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class CardTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Card
+        from omise import Card
         return Card
 
     def _makeOne(self):

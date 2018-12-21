@@ -11,7 +11,7 @@ class TokenTest(_ResourceMixin, unittest.TestCase):
         return Token
 
     def _getCardClass(self):
-        from .. import Card
+        from omise import Card
         return Card
 
     @mock.patch('requests.post')

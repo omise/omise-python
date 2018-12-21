@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class DisputeTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Dispute
+        from omise import Dispute
         return Dispute
 
     def _getCollectionClass(self):
