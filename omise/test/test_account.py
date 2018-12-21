@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class AccountTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Account
+        from omise import Account
         return Account
 
     @mock.patch('requests.get')

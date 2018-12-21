@@ -10,7 +10,7 @@ class CollectionTest(_ResourceMixin, unittest.TestCase):
         return Collection
 
     def _getAccountClass(self):
-        from .. import Account
+        from omise import Account
         return Account
 
     def _makeOne(self):
