@@ -1,5 +1,4 @@
-from omise import Base, LazyCollection
-from .main_resource import _MainResource
+from omise import Base, LazyCollection, _MainResource
 
 
 class Refund(_MainResource, Base):

@@ -1,5 +1,4 @@
-from omise import Base
-from .main_resource import _MainResource
+from omise import Base, _MainResource
 
 
 class Card(_MainResource, Base):

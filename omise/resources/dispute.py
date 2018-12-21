@@ -1,5 +1,4 @@
-from omise import Base, _as_object, LazyCollection
-from .main_resource import _MainResource
+from omise import Base, _as_object, LazyCollection, _MainResource
 
 
 class Dispute(_MainResource, Base):

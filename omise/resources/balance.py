@@ -1,5 +1,5 @@
-from omise import Base, _as_object
-from .main_resource import _MainResource
+from omise import Base, _as_object, _MainResource
+
 
 class Balance(_MainResource, Base):
     """API class representing balance details.

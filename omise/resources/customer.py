@@ -1,5 +1,5 @@
-from omise import Base, _as_object, Card, LazyCollection
-from .main_resource import _MainResource
+from omise import Base, _as_object, Card, LazyCollection, _MainResource
+
 
 class Customer(_MainResource, Base):
     """API class representing a customer in an account.

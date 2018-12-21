@@ -1,5 +1,4 @@
-from omise import Base, _as_object
-from omise.resources.vault_resource import _VaultResource
+from omise import Base, _as_object, _VaultResource
 
 
 class Token(_VaultResource, Base):

@@ -23,28 +23,29 @@ api_main = 'https://api.omise.co'
 api_vault = 'https://vault.omise.co'
 
 
-# __all__ = [
-#     'Balance',
-#     'BankAccount',
-#     'Card',
-#     'Charge',
-#     'Collection',
-#     'Customer',
-#     'Dispute',
-#     'Event',
-#     'Forex',
-#     'Link',
-#     'Occurrence',
-#     'Receipt',
-#     'Recipient',
-#     'Refund',
-#     'Search',
-#     'Schedule',
-#     'Source',
-#     'Token',
-#     'Transaction',
-#     'Transfer',
-# ]
+__all__ = [
+    'Account',
+    'Balance',
+    'BankAccount',
+    'Card',
+    'Charge',
+    'Collection',
+    'Customer',
+    'Dispute',
+    'Event',
+    'Forex',
+    'Link',
+    'Occurrence',
+    'Receipt',
+    'Recipient',
+    'Refund',
+    'Search',
+    'Schedule',
+    'Source',
+    'Token',
+    'Transaction',
+    'Transfer',
+]
 
 
 def _get_class_for(type):
@@ -262,8 +263,28 @@ class LazyCollection(object):
             }
         )
 
+
+class _MainResource(Base):
+
+    @classmethod
+    def _request(cls, *args, **kwargs):
+        return Request(api_secret, api_main, api_version).send(*args, **kwargs)
+
+    def _nested_object_path(self, association_cls):
+        return (
+            self.__class__._collection_path(),
+            self.id, association_cls._collection_path()
+        )
+
+
+class _VaultResource(Base):
+
+    @classmethod
+    def _request(cls, *args, **kwargs):
+        return Request(api_public, api_vault, api_version).send(*args, **kwargs)
+
+
 from .resources.account import Account
-from .resources.main_resource import _MainResource
 from .resources.charge import Charge
 from .resources.balance import Balance
 from .resources.card import Card
@@ -284,3 +305,5 @@ from .resources.recipient import Recipient
 from .resources.bank_account import BankAccount
 from .resources.token import Token
 from .resources.collection import Collection
+
+
