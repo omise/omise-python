@@ -7,7 +7,7 @@ from .helper import _RequestAssertable
 class RequestTest(_RequestAssertable, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Request
+        from ..request import Request
         return Request
 
     def test_init(self):
