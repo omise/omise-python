@@ -11,7 +11,7 @@ class RecipientTest(_ResourceMixin, unittest.TestCase):
         return Recipient
 
     def _getCollectionClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     def _getBankAccountClass(self):

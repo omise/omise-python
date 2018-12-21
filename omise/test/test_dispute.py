@@ -11,7 +11,7 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
         return Dispute
 
     def _getCollectionClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     def _makeOne(self):

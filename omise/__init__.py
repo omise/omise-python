@@ -193,37 +193,6 @@ class Base(object):
         return dict((c, self._attributes.get(c)) for c in self._changes)
 
 
-class Collection(Base):
-    """Proxy class representing a collection of items."""
-
-    def __len__(self):
-        return len(self._attributes['data'])
-
-    def __iter__(self):
-        for obj in self._attributes['data']:
-            yield _as_object(obj)
-
-    def __getitem__(self, item):
-        return _as_object(self._attributes['data'][item])
-
-    def retrieve(self, object_id=None):
-        """Retrieve the specific :param:`object_id` from the list of objects.
-
-        If no :param:`object_id` is given, a list of all objects will be
-        returned instead. This is equivalent of calling ``list(collection)``.
-
-        :param object_id: an object id to retrieve.
-        :type object_id: str
-        :rtype: T <= Base
-        """
-        if object_id is None:
-            return list(self)
-        else:
-            for obj in self._attributes['data']:
-                if obj['id'] == object_id:
-                    return _as_object(obj)
-
-
 class LazyCollection(object):
     """Proxy class representing a lazy collection of items."""
     def __init__(self, collection_path):
@@ -293,7 +262,6 @@ class LazyCollection(object):
             }
         )
 
-
 from .resources.account import Account
 from .resources.main_resource import _MainResource
 from .resources.charge import Charge
@@ -315,3 +283,4 @@ from .resources.receipt import Receipt
 from .resources.recipient import Recipient
 from .resources.bank_account import BankAccount
 from .resources.token import Token
+from .resources.collection import Collection

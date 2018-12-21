@@ -6,7 +6,7 @@ from .helper import _ResourceMixin
 class CollectionTest(_ResourceMixin, unittest.TestCase):
 
     def _getTargetClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     def _getAccountClass(self):

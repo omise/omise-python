@@ -1,4 +1,4 @@
-from omise import Base, LazyCollection, _as_object, Card
+from omise import Base, _as_object, Card, LazyCollection
 from .main_resource import _MainResource
 
 class Customer(_MainResource, Base):

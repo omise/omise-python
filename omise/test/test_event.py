@@ -10,7 +10,7 @@ class EventTest(_ResourceMixin, unittest.TestCase):
         return Event
 
     def _getCollectionClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     def _getChargeClass(self):

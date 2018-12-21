@@ -11,7 +11,7 @@ class TransferTest(_ResourceMixin, unittest.TestCase):
         return Transfer
 
     def _getCollectionClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     def _makeOne(self):

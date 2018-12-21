@@ -47,7 +47,7 @@ class Transaction(_MainResource, Base):
     def list(cls):
         """Return all transactions that belongs to your account.
 
-        :rtype: LazyCollection
+        :rtype: omise.LazyCollection
         """
         return LazyCollection(cls._collection_path())
 

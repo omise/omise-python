@@ -7,7 +7,7 @@ from .helper import _ResourceMixin
 class LazyCollectionTest(_ResourceMixin, unittest.TestCase):
 
     def _getLazyCollectionClass(self):
-        from .. import LazyCollection
+        from omise import LazyCollection
         return LazyCollection
 
     def _getCustomerClass(self):

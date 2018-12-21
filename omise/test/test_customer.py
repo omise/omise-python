@@ -15,7 +15,7 @@ class CustomerTest(_ResourceMixin, unittest.TestCase):
         return Card
 
     def _getCollectionClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     def _makeOne(self):

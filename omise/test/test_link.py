@@ -11,7 +11,7 @@ class LinkTest(_ResourceMixin, unittest.TestCase):
         return Link
 
     def _getCollectionClass(self):
-        from .. import Collection
+        from omise import Collection
         return Collection
 
     @mock.patch('requests.post')
