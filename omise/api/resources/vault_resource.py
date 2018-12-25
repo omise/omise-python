@@ -1,6 +1,6 @@
 import omise
-from omise.api import *
 from omise.request import Request
+from .base import Base
 
 
 class VaultResource(Base):

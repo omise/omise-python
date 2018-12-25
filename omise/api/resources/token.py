@@ -1,5 +1,6 @@
-from omise.api import *
-from omise.api.resources import *
+from .base import Base
+from .vault_resource import VaultResource
+from .utils import as_object
 
 
 class Token(VaultResource, Base):

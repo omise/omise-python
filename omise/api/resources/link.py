@@ -1,5 +1,7 @@
-from omise.api import *
-from omise.api.resources import *
+from .base import Base
+from .main_resource import MainResource
+from .lazy_collection import LazyCollection
+from .utils import as_object
 
 
 class Link(MainResource, Base):

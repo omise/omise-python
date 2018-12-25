@@ -1,4 +1,5 @@
-from omise.api import *
+from .base import Base
+from .utils import as_object
 
 
 class Collection(Base):

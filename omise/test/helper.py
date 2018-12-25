@@ -47,7 +47,7 @@ class _ResourceMixin(_RequestAssertable):
         self._public_mocker.stop()
 
     def _getTargetClass(self):
-        from omise import Base
+        from omise.api.resources.base import Base
         return Base
 
     def test_from_data(self):

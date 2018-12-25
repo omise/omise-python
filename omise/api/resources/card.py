@@ -1,6 +1,6 @@
 import copy
-from omise.api import *
-from omise.api.resources import *
+from .base import Base
+from .main_resource import MainResource
 
 
 class Card(MainResource, Base):

@@ -1,8 +1,3 @@
-from .collection import Collection
-from .main_resource import MainResource
-from .vault_resource import VaultResource
-from .lazy_collection import LazyCollection
-
 from .account import Account
 from .charge import Charge
 from .balance import Balance
@@ -23,4 +18,4 @@ from .receipt import Receipt
 from .recipient import Recipient
 from .bank_account import BankAccount
 from .token import Token
-
+from .collection import Collection

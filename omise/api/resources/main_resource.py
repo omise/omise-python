@@ -1,5 +1,5 @@
 import omise
-from omise.api import *
+from .base import Base
 from omise.request import Request
 
 

@@ -1,6 +1,8 @@
 import copy
-from omise.api import *
-from omise.api.resources import *
+from .base import Base
+from .main_resource import MainResource
+from .utils import as_object
+from .lazy_collection import LazyCollection
 
 
 class Transfer(MainResource, Base):
