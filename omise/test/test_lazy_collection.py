@@ -69,9 +69,9 @@ class LazyCollectionTest(_ResourceMixin, unittest.TestCase):
         lazy_collection = self._makeOne()
         self.mockResponse(api_call, self._mocked_response())
         iterable = iter(lazy_collection)
-        firstItem = next(iterable)
-        self.assertTrue(isinstance(firstItem, self._getCustomerClass()))
-        self.assertEqual(firstItem.id, 'cust_a')
+        first_item = next(iterable)
+        self.assertTrue(isinstance(first_item, self._getCustomerClass()))
+        self.assertEqual(first_item.id, 'cust_a')
         self.assertEqual(next(iterable).id, 'cust_b')
 
     @mock.patch('requests.get')
