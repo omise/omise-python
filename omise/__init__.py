@@ -1,6 +1,7 @@
 import copy
 import sys
 
+import collections
 from .request import Request
 
 
@@ -870,18 +871,17 @@ class LazyCollection(object):
 
     def __iter__(self):
         self.limit = 100
-        self.listing = []
-
-        self._list_index = 0
+        self.listing = collections.deque([])
+        self._total_data_length = 0
 
         return self
 
     def __next__(self):
-        if (self.listing is None) or (self._list_index + 1 > len(self.listing)):
-            self._next_batch(limit=self.limit, offset=self._list_index)
+        if (self.listing is None) or len(self.listing) == 0:
+            self._next_batch(limit=self.limit, offset=self._total_data_length)
 
-        self._list_index += 1
-        return _as_object(self.listing[self._list_index - 1])
+        self._total_data_length += 1
+        return _as_object(self.listing.popleft())
 
     def next(self):
         return self.__next__()
@@ -904,13 +904,12 @@ class LazyCollection(object):
         data = obj['data']
 
         if len(data) > 0:
-            self._add_to_listing(data)
+            self._update_listing(data)
         else:
             raise StopIteration
 
-    def _add_to_listing(self, data):
-        for item in data:
-            self.listing.append(item)
+    def _update_listing(self, data):
+        self.listing.extend(data)
 
         if len(data) < self.limit:
             self._exhausted = True
