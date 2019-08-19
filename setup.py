@@ -21,7 +21,6 @@ setup(name='omise',
       install_requires=['requests >= 2.12.1'],
       tests_require=['nose >= 1.3.4', 'mock >= 1.0.1'],
       test_suite='omise.test',
-      package_data={'omise': ['data/ca_certificates.pem']},
       classifiers=[
           "License :: OSI Approved :: MIT License",
           "Operating System :: OS Independent",
