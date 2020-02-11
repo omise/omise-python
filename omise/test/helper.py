@@ -30,8 +30,7 @@ class _RequestAssertable(object):
             url,
             data=json.dumps(data, sort_keys=True),
             headers=headers,
-            auth=(mock.ANY, ''),
-            verify=mock.ANY)
+            auth=(mock.ANY, ''))
 
 
 class _ResourceMixin(_RequestAssertable):
