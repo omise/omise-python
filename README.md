@@ -29,6 +29,8 @@ The Omise Python client officially supports the following Python versions:
 * Python 3.4
 * Python 3.5
 * Python 3.6
+* Python 3.7
+* Python 3.8
 
 Any versions not listed here _may_ work but they are not automatically tested.
 
@@ -79,18 +81,16 @@ It is highly recommended to set this version to the current version you're using
 
 ## Contributing
 
-The Omise Python client uses [Vagrant](https://www.vagrantup.com/) for development environment provisioning and require all changes to be tested against all supported Python versions. You can bootstrap the environment with the following instructions:
+The Omise Python client uses `tox` and [Docker](https://docs.docker.com/) for testing.
+All changes must be tested against all supported Python versions.
+You can run tests using the following instructions:
 
-1. Install [Vagrant](https://www.vagrantup.com/) with [provider](https://docs.vagrantup.com/v2/providers/index.html) of your choice (e.g. [VirtualBox](https://www.virtualbox.org/))
-2. Run `vagrant up` and read Vagrant's [Getting Started](https://docs.vagrantup.com/v2/getting-started/index.html) while waiting.
+1. Install [Docker](https://docs.docker.com/)
+2. Run `docker run -it -v $(pwd):/app --rm $(docker build -q .)`
 
-After the box is up and running, you can now SSH to the server and run [tox](http://tox.readthedocs.org/en/latest/) to test against all supported Python versions:
+This command builds a Docker image using the [Dockerfile](Dockerfile), mounts the current directory to the container's `/app` directory, and runs the default entrypoint for the image: `/app/run-tox.sh`.
 
-1. Run `vagrant ssh` to SSH into the provisioned box.
-2. Run `cd /vagrant` to navigate to working directory.
-3. Run `tox` to run tests against all supported Python versions.
-
-Any changes made locally to the source code will be automatically updated to the box. After you've done with the changes, please open a [Pull Request](https://github.com/omise/omise-python/pulls).
+After you've made your changes and run the tests, please open a [Pull Request](https://github.com/omise/omise-python/pulls).
 
 ## License
 
