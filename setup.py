@@ -7,9 +7,9 @@ if os.environ.get('USER', '') == 'vagrant':
     del os.link
 
 try:
-    from setuptools import setup, find_packages
+    from setuptools import setup
 except ImportError:
-    from distutils.core import setup, find_packages
+    from distutils.core import setup
 
 setup(name='omise',
       version='0.9.0',
