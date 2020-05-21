@@ -346,7 +346,7 @@ class Token(_VaultResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a credit card token with the given card details.
+        r"""Create a credit card token with the given card details.
 
         In production environment, the token should be created with
         `Omise.js <https://docs.omise.co/omise-js>`_ and credit card details
@@ -434,7 +434,7 @@ class Card(_MainResource, Base):
                           self._attributes['location']))
 
     def update(self, **kwargs):
-        """Update the card information with the given card details.
+        r"""Update the card information with the given card details.
 
         See the `update a card`_ section in the API documentation for list
         of available arguments.
@@ -522,7 +522,7 @@ class Charge(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a charge to the given card details.
+        r"""Create a charge to the given card details.
 
         See the `create a charge`_ section in the API documentation for list
         of available arguments.
@@ -582,7 +582,7 @@ class Charge(_MainResource, Base):
                           self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
-        """Update the charge details with the given arguments.
+        r"""Update the charge details with the given arguments.
 
         See the `update a charge`_ section in the API documentation for list
         of available arguments.
@@ -725,7 +725,7 @@ class Customer(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a customer with the given card token.
+        r"""Create a customer with the given card token.
 
         See the `create a customer`_ section in the API documentation for list
         of available arguments.
@@ -776,7 +776,7 @@ class Customer(_MainResource, Base):
                           self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
-        """Update the customer details with the given arguments.
+        r"""Update the customer details with the given arguments.
 
         See the `update a customer`_ section in the API documentation for list
         of available arguments.
@@ -1005,7 +1005,7 @@ class Dispute(_MainResource, Base):
                           self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
-        """Update the dispute details with the given arguments.
+        r"""Update the dispute details with the given arguments.
 
         See the `update a dispute`_ section in the API documentation for list
         of available arguments.
@@ -1142,7 +1142,7 @@ class Link(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a link for creating charge once or multiple times.
+        r"""Create a link for creating charge once or multiple times.
 
         See the `create a link`_ section in the API documentation for list
         of available arguments.
@@ -1290,7 +1290,7 @@ class Recipient(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a recipient with the given parameters.
+        r"""Create a recipient with the given parameters.
 
         See the `create a recipient`_ section in the API documentation for list
         of available arguments.
@@ -1355,7 +1355,7 @@ class Recipient(_MainResource, Base):
                           self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
-        """Update the recipient details with the given arguments.
+        r"""Update the recipient details with the given arguments.
 
         See the `update a recipient`_ section in the API documentation for list
         of available arguments.
@@ -1529,7 +1529,7 @@ class Schedule(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a schedule charge object to
+        r"""Create a schedule charge object to
         the bank account.
 
         See the `create a schedule`_ section in the API documentation for list
@@ -1712,7 +1712,7 @@ class Transfer(_MainResource, Base):
 
     @classmethod
     def create(cls, **kwargs):
-        """Create a transfer to the bank account.
+        r"""Create a transfer to the bank account.
 
         See the `create a transfer`_ section in the API documentation for list
         of available arguments.
@@ -1769,7 +1769,7 @@ class Transfer(_MainResource, Base):
                           self._instance_path(self._attributes['id'])))
 
     def update(self, **kwargs):
-        """Update the transfers details with the given arguments.
+        r"""Update the transfers details with the given arguments.
 
         This method will update the transfer if it is still in the pending
         state (i.e. not sent or paid.) An attempt to update a non-pending
