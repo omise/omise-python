@@ -20,7 +20,7 @@ setup(name='omise',
       packages=['omise', 'omise.test'],
       install_requires=['requests >= 2.12.1'],
       extras_require={
-          'ooo': ['pytest >= 5.4.2', 'mock >= 1.0.1']
+          'test': ['pytest >= 5.4.2', 'mock >= 1.0.1']
       },
       test_suite='omise.test',
       classifiers=[
