@@ -19,7 +19,9 @@ setup(name='omise',
       url='https://www.omise.co/',
       packages=['omise', 'omise.test'],
       install_requires=['requests >= 2.12.1'],
-      tests_require=['nose >= 1.3.4', 'mock >= 1.0.1'],
+      extras_require={
+          'test': ['pytest >= 5.4.2', 'mock >= 1.0.1']
+      },
       test_suite='omise.test',
       classifiers=[
           "License :: OSI Approved :: MIT License",
