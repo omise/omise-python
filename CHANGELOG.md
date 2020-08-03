@@ -1,3 +1,12 @@
+## [0.9.0] - 2020-08-03
+
+Please upgrade to this version before 20 October 2020.
+After this date, the certificate pinned on older versions will expire and prevent this library from functioning.
+
+* [Changed] Added support 3.7 and 3.8
+* [Changed] Removed support for 3.3
+* [Changed] Return resource lists as lazy collections
+
 ## [0.8.1] - 2018-05-21
 
 This version fixes Schedule API getting wrong response when it destroyed.
