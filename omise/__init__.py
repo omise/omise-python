@@ -252,6 +252,14 @@ class Account(_MainResource, Base):
         """
         return self._reload_data(self._request('get', self._instance_path()))
 
+    def update(self, **kwargs):
+        changed = copy.deepcopy(self.changes)
+        changed.update(kwargs)
+        return self._reload_data(
+            self._request('patch',
+                          self._attributes['location'],
+                          changed))
+
 
 class Balance(_MainResource, Base):
     """API class representing balance details.
