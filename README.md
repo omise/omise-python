@@ -1,6 +1,6 @@
 # Omise Python Client
 
-![Python package](https://github.com/omise/omise-python/workflows/Python%20package/badge.svg?branch=add-github-actions-simple)
+![Python package](https://github.com/omise/omise-python/workflows/Python%20package/badge.svg?branch=master)
 [![Python Versions](https://img.shields.io/pypi/pyversions/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
 [![PyPi Version](https://img.shields.io/pypi/v/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
 
