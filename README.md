@@ -1,6 +1,6 @@
 # Omise Python Client
 
-[![Build Status](https://travis-ci.org/omise/omise-python.svg?branch=master)](https://travis-ci.org/omise/omise-python)
+![Python package](https://github.com/omise/omise-python/workflows/Python%20package/badge.svg?branch=add-github-actions-simple)
 [![Python Versions](https://img.shields.io/pypi/pyversions/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
 [![PyPi Version](https://img.shields.io/pypi/v/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
 
