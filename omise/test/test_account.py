@@ -79,7 +79,7 @@ class AccountTest(_ResourceMixin, unittest.TestCase):
           "auto_activate_recipients": true,
           "chain_enabled": true,
           "zero_interest_installments": true,
-          "chain_return_uri": "https://dashboard.omise.co/test/settings",
+          "chain_return_uri": "https://omise-flask-example.herokuapp.com",
           "webhook_uri": "https://omise-flask-example.herokuapp.com/webhook",
           "metadata_export_keys": {
             "charge": [
@@ -90,9 +90,9 @@ class AccountTest(_ResourceMixin, unittest.TestCase):
         }""")
 
         self.assertTrue(isinstance(account, class_))
-        account.chain_enabled = True
-        account.update()
-        self.assertEqual(account.chain_enabled, True)
+        self.assertFalse(account.chain_enabled)
+        account.update(chain_enabled=True)
+        self.assertTrue(account.chain_enabled)
         self.assertRequest(
             api_call,
             'https://api.omise.co/account',
