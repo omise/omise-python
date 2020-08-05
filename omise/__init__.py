@@ -253,6 +253,26 @@ class Account(_MainResource, Base):
         return self._reload_data(self._request('get', self._instance_path()))
 
     def update(self, **kwargs):
+        """Update account settings with the given arguments.
+
+        See the `update an account`_ section in the API documentation for list
+        of available arguments.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+            >>> account = omise.Account.retrieve()
+            >>> account.update(webhook_uri='https://omise-flask-example.herokuapp.com/webhook')
+            <Account id='account_test_5kms3d70v77fs5c37v6' at 0x108cec240>
+
+        :param \*\*kwargs: arguments to update an account.
+        :rtype: Account
+
+        .. _update an account:
+        ..     https://www.omise.co/account-api#update
+        """
+
         changed = copy.deepcopy(self.changes)
         changed.update(kwargs)
         return self._reload_data(
