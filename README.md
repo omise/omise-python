@@ -32,15 +32,16 @@ Any versions not listed here _may_ work but they are not automatically tested.
 
 ## Usage
 
-Please refer to an example in [API documentation](https://docs.omise.co/) or the [help](https://docs.python.org/2/library/functions.html#help) function for documentation. For basic usage, you can use the module in your application by importing the `omise` module and set the secret key and public key:
+Please refer to examples in our [API documentation](https://www.omise.co/docs).
+For basic usage, you can use the package in your application by importing `omise` and setting the secret key:
 
 ```python
 >>> import omise
 >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
->>> omise.api_public = 'pkey_test_4xs8breq32civvobx15'
 ```
 
-After both keys are set, you can now use all the APIs. For example, to create a new customer without any cards associated to the customer:
+After the secret key is set, you can use all APIs which use secret key authentication.
+For example, to create a new customer without any cards associated to the customer:
 
 ```python
 >>> customer = omise.Customer.create(
@@ -62,15 +63,18 @@ Then to retrieve, update and destroy that customer:
 True
 ```
 
-In case of any errors (such as authentication failure, invalid card and others as listed in [errors](https://docs.omise.co/api/errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raise. The application code must be handling these errors as appropriate.
+In case of error (such as authentication failure, invalid card and others as listed in [errors](https://www.omise.co/api-errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raised.
+Your application code should handle these errors appropriately.
 
 ### API version
 
-In case you want to enforce API version the application use, you can specify it by setting `api_version`. The version specified by this settings will override the version setting in your account. This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
+In case you want to enforce API version the application use, you can specify it by setting `api_version`.
+The version specified by this setting will override the version setting in your account.
+This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
 
 ```python
 >>> import omise
->>> omise.api_version = '2014-07-27'
+>>> omise.api_version = '2019-05-29'
 ```
 
 It is highly recommended to set this version to the current version you're using.
