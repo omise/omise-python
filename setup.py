@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+from io import open
 
 # Workaround for hardlink problem in Python 2.7+
 # See also: http://bugs.python.org/issue8876
