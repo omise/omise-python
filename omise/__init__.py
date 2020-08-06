@@ -448,10 +448,25 @@ class Card(_MainResource, Base):
         '4242'
     """
 
-
     @classmethod
     def _collection_path(cls):
         return 'cards'
+
+    @classmethod
+    def _instance_path(cls, customer_id, card_id):
+        return ('customers', customer_id, 'cards', card_id)
+
+    @classmethod
+    def retrieve(cls, customer_id, card_id):
+        """Retrieve the card details for the given :param:`card_id`.
+
+        :param customer_id: a customer id of card id.
+        :type customer_id: str
+        :param card_id: a card id to retrieve.
+        :type card_id: str
+        :rtype: Card
+        """
+        return _as_object(cls._request('get', cls._instance_path(customer_id, card_id)))
 
     def reload(self):
         """Reload the card details.
