@@ -36,30 +36,30 @@ Please refer to examples in our [API documentation](https://www.omise.co/docs).
 For basic usage, you can use the package in your application by importing `omise` and setting the secret key:
 
 ```python
->>> import omise
->>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+import omise
+omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
 ```
 
 After the secret key is set, you can use all APIs which use secret key authentication.
 For example, to create a new customer without any cards associated to the customer:
 
 ```python
->>> customer = omise.Customer.create(
->>>    description='John Doe',
->>>    email='john.doe@example.com'
->>> )
+customer = omise.Customer.create(
+   description='John Doe',
+   email='john.doe@example.com'
+)
 <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
 ```
 
 Then to retrieve, update and destroy that customer:
 
 ```python
->>> customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
->>> customer.description = 'John W. Doe'
->>> customer.update()
+customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
+customer.description = 'John W. Doe'
+customer.update()
 <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
->>> customer.destroy()
->>> customer.destroyed
+customer.destroy()
+customer.destroyed
 True
 ```
 
@@ -73,8 +73,8 @@ The version specified by this setting will override the version setting in your 
 This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
 
 ```python
->>> import omise
->>> omise.api_version = '2019-05-29'
+import omise
+omise.api_version = '2019-05-29'
 ```
 
 It is highly recommended to set this version to the current version you're using.
