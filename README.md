@@ -41,26 +41,42 @@ omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
 ```
 
 After the secret key is set, you can use all APIs which use secret key authentication.
-For example, to create a new customer without any cards associated to the customer:
+
+To create a new credit card charge, use Omise.js to create a new token and run the following:
+
+``` python
+token_id = "tokn_test_no1t4tnemucod0e51mo" # see https://www.omise.co/tokens-api#create
+charge = omise.Charge.create(
+    amount=100000,
+    currency="THB",
+    card=token_id,
+    return_uri="https://www.omise.co/example_return_uri",
+)
+# <Charge id='chrg_test_5ktrim62oiosnrc1r41' at 0x105d6bf28>
+charge.status
+# 'successful'
+```
+
+To create a new customer without any cards associated to the customer, run the following:
 
 ```python
 customer = omise.Customer.create(
    description='John Doe',
    email='john.doe@example.com'
 )
-<Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
+# <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
 ```
 
-Then to retrieve, update and destroy that customer:
+Then to retrieve, update, and destroy that customer, run the following:
 
 ```python
 customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
 customer.description = 'John W. Doe'
 customer.update()
-<Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
+# <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
 customer.destroy()
 customer.destroyed
-True
+# True
 ```
 
 In case of error (such as authentication failure, invalid card and others as listed in [errors](https://www.omise.co/api-errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raised.
