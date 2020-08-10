@@ -32,45 +32,65 @@ Any versions not listed here _may_ work but they are not automatically tested.
 
 ## Usage
 
-Please refer to an example in [API documentation](https://docs.omise.co/) or the [help](https://docs.python.org/2/library/functions.html#help) function for documentation. For basic usage, you can use the module in your application by importing the `omise` module and set the secret key and public key:
+Please refer to examples in our [API documentation](https://www.omise.co/docs).
+For basic usage, you can use the package in your application by importing `omise` and setting the secret key:
 
 ```python
->>> import omise
->>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
->>> omise.api_public = 'pkey_test_4xs8breq32civvobx15'
+import omise
+omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
 ```
 
-After both keys are set, you can now use all the APIs. For example, to create a new customer without any cards associated to the customer:
+After the secret key is set, you can use all APIs which use secret key authentication.
+
+To create a new credit card charge, use Omise.js to create a new token and run the following:
+
+``` python
+token_id = "tokn_test_no1t4tnemucod0e51mo" # see https://www.omise.co/tokens-api#create
+charge = omise.Charge.create(
+    amount=100000,
+    currency="THB",
+    card=token_id,
+    return_uri="https://www.omise.co/example_return_uri",
+)
+# <Charge id='chrg_test_5ktrim62oiosnrc1r41' at 0x105d6bf28>
+charge.status
+# 'successful'
+```
+
+To create a new customer without any cards associated to the customer, run the following:
 
 ```python
->>> customer = omise.Customer.create(
->>>    description='John Doe',
->>>    email='john.doe@example.com'
->>> )
-<Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
+customer = omise.Customer.create(
+   description='John Doe',
+   email='john.doe@example.com'
+)
+# <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
 ```
 
-Then to retrieve, update and destroy that customer:
+Then to retrieve, update, and destroy that customer, run the following:
 
 ```python
->>> customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
->>> customer.description = 'John W. Doe'
->>> customer.update()
-<Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
->>> customer.destroy()
->>> customer.destroyed
-True
+customer = omise.Customer.retrieve('cust_test_4xtrb759599jsxlhkrb')
+customer.description = 'John W. Doe'
+customer.update()
+# <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7ffab7136910>
+customer.destroy()
+customer.destroyed
+# True
 ```
 
-In case of any errors (such as authentication failure, invalid card and others as listed in [errors](https://docs.omise.co/api/errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raise. The application code must be handling these errors as appropriate.
+In case of error (such as authentication failure, invalid card and others as listed in [errors](https://www.omise.co/api-errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raised.
+Your application code should handle these errors appropriately.
 
 ### API version
 
-In case you want to enforce API version the application use, you can specify it by setting `api_version`. The version specified by this settings will override the version setting in your account. This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
+In case you want to enforce API version the application use, you can specify it by setting `api_version`.
+The version specified by this setting will override the version setting in your account.
+This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
 
 ```python
->>> import omise
->>> omise.api_version = '2014-07-27'
+import omise
+omise.api_version = '2019-05-29'
 ```
 
 It is highly recommended to set this version to the current version you're using.
