@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+from io import open
 
 # Workaround for hardlink problem in Python 2.7+
 # See also: http://bugs.python.org/issue8876
@@ -11,7 +12,12 @@ try:
 except ImportError:
     from distutils.core import setup
 
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(name='omise',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       version='0.9.0',
       description='Omise Python client',
       author='Omise',
