@@ -4,6 +4,7 @@
 .eggs/
 .vagrant/
 dist/
+.DS_Store
 
 # Tests
 .coverage
