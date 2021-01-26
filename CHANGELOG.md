@@ -1,3 +1,10 @@
+# Changelog
+
+## [0.10.0] - 2021-01-26
+
+* [Added] Add destroy method for link
+* [Added] Add testing for 3.9
+
 ## [0.9.0] - 2020-08-03
 
 Please upgrade to this version before 20 October 2020.
