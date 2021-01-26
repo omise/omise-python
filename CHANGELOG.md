@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.10.0] - 2021-01-26
+## [0.10.0] - 2021-01-27
 
 * [Added] Add destroy method for link
 * [Added] Add testing for 3.9
