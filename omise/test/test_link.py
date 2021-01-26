@@ -14,6 +14,33 @@ class LinkTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _makeOne(self):
+        return self._getTargetClass().from_data({
+            'object': 'link',
+            'id': 'link_test',
+            'livemode': False,
+            'location': '/links/link_test',
+            'amount': 10000,
+            'currency': 'thb',
+            'used': False,
+            'multiple': False,
+            'description': 'Description of order-384',
+            'title': 'Order-384',
+            'charges': {
+                'object': 'list',
+                'from': '1970-01-01T07:00:00+07:00',
+                'to': '2017-03-03T19:22:33+07:00',
+                'offset': 0,
+                'limit': 20,
+                'total': 0,
+                'order': None,
+                'location': '/links/link_test/charges',
+                'data': []
+            },
+            'payment_uri': 'http://link.example.com/0BB268C6',
+            'created': '2017-03-03T12:16:48Z'
+        })
+
     @mock.patch('requests.post')
     def test_create(self, api_call):
         class_ = self._getTargetClass()
@@ -178,3 +205,24 @@ class LinkTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(links[1].id, 'link_test_2')
         self.assertTrue(links[1].amount, 20000)
         self.assertRequest(api_call, 'https://api.omise.co/links')
+
+    @mock.patch('requests.delete')
+    def test_destroy(self, api_call):
+        link = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "link",
+            "id": "link_test",
+            "livemode": false,
+            "deleted": true
+        }""")
+
+        self.assertTrue(isinstance(link, class_))
+        self.assertEqual(link.id, 'link_test')
+
+        link.destroy()
+        self.assertTrue(link.destroyed)
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/links/link_test'
+        )

@@ -1244,6 +1244,33 @@ class Link(_MainResource, Base):
             self._request('get',
                           self._instance_path(self._attributes['id'])))
 
+    def destroy(self):
+        """Delete the link from the server.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
+            >>> link = omise.Link.retrieve('link_test_5dsoxxan7gxrqihu8rs')
+            >>> link.destroy()
+            <Link id='link_test_5dsoxxan7gxrqihu8rs' at 0x7fcc349bdd90>
+            >>> link.destroyed
+            True
+
+        :rtype: Link
+        """
+        return self._reload_data(
+            self._request('delete',
+                          self._instance_path(self.id)))
+
+    @property
+    def destroyed(self):
+        """Returns ``True`` if the link has been deleted.
+
+        :rtype: bool
+        """
+        return self._attributes.get('deleted', False)
+
 
 class Occurrence(_MainResource, Base):
     """API class representing occurrence information.
