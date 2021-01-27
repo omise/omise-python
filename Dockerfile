@@ -12,11 +12,11 @@ RUN apt-get update && apt-get install -y curl git-core make build-essential libr
 RUN curl https://pyenv.run | bash
 ENV PATH="/root/.pyenv/bin:$PATH"
 RUN pyenv install 2.7.17
-RUN pyenv install 3.5.9
 RUN pyenv install 3.6.10
 RUN pyenv install 3.7.6
 RUN pyenv install 3.8.1
-RUN pyenv global 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
+RUN pyenv install 3.9.1
+RUN pyenv global 3.9.1 3.8.1 3.7.6 3.6.10 2.7.17
 
 ## run tests
 
