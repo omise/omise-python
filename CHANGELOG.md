@@ -6,6 +6,7 @@
 * [Added] Add destroy method for Link (https://github.com/omise/omise-python/pull/39)
 * [Added] Add Card.retrieve(customer_id, card_id) method (https://github.com/omise/omise-python/pull/37)
 * [Added] Add testing for 3.9 (https://github.com/omise/omise-python/pull/40)
+* [Removed] Remove testing for 3.5 (EOL) (https://github.com/omise/omise-python/pull/40)
 
 ## [0.9.0] - 2020-08-03
 
