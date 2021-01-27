@@ -2,8 +2,10 @@
 
 ## [0.10.0] - 2021-01-27
 
-* [Added] Add destroy method for link
-* [Added] Add testing for 3.9
+* [Added] Add update method for Account (#34)
+* [Added] Add destroy method for Link (#39)
+* [Added] Add Card.retrieve(customer_id, card_id) method (#37)
+* [Added] Add testing for 3.9 (#40)
 
 ## [0.9.0] - 2020-08-03
 
