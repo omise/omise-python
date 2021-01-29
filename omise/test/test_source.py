@@ -79,3 +79,27 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
                 'type': 'tesco_lotus'
             }
         )
+
+    @mock.patch('requests.get')
+    def test_retrieve(self, api_call):
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "source",
+            "id": "src_test",
+            "type": "internet_banking_test",
+            "flow": "redirect",
+            "amount": 100000,
+            "currency": "thb"
+        }""")
+
+        source = class_.retrieve('src_test')
+        self.assertTrue(isinstance(source, class_))
+        self.assertEqual(source.id, 'src_test')
+        self.assertEqual(source.type, 'internet_banking_test')
+        self.assertEqual(source.flow, 'redirect')
+        self.assertEqual(source.amount, 100000)
+        self.assertEqual(source.currency, 'thb')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/sources/src_test'
+        )
