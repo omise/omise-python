@@ -667,6 +667,15 @@ class Charge(_MainResource, Base):
         path = self._instance_path(self._attributes['id']) + ('reverse',)
         return self._reload_data(self._request('post', path))
 
+    def expire(self):
+        """Set a charge that has not yet been authorized to expire. Supported
+        payment method: Alipay (Barcode)
+        
+        :rtype: Charge
+        """
+        path = self._instance_path(self._attributes['id']) + ('expire',)
+        return self._reload_data(self._request('post', path))
+
     def refund(self, **kwargs):
         """Refund a refundable charge.
 
