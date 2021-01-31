@@ -29,6 +29,7 @@ __all__ = [
     'Account',
     'Balance',
     'BankAccount',
+    'Capability',
     'Card',
     'Charge',
     'Collection',
@@ -64,6 +65,7 @@ def _get_class_for(type):
         'account': Account,
         'balance': Balance,
         'bank_account': BankAccount,
+        'capability': Capability,
         'card': Card,
         'charge': Charge,
         'customer': Customer,
@@ -341,6 +343,41 @@ class BankAccount(Base):
             type(self).__name__,
             ' name=%s' % repr(str(name)) if name else '',
             hex(id(self)))
+
+
+class Capability(_MainResource, Base):
+    """API class representing capability details.
+
+    This API class is used for retrieving the account capabilities.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> capability = omise.Capability.retrieve()
+        <Capability at 0x7f9b242bddd0>
+        >>> capability.zero_interest_installments
+        True
+    """
+
+    @classmethod
+    def _instance_path(cls, *args):
+        return 'capability'
+
+    @classmethod
+    def retrieve(cls):
+        """Retrieve the account capabilities.
+
+        :rtype: Capability
+        """
+        return _as_object(cls._request('get', cls._instance_path()))
+
+    def reload(self):
+        """Reload the capability details.
+
+        :rtype: Capability
+        """
+        return self._reload_data(self._request('get', self._instance_path()))
 
 
 class Token(_VaultResource, Base):
