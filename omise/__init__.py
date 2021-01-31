@@ -1750,11 +1750,26 @@ class Source(_MainResource, Base):
     """
 
     @classmethod
+    def _instance_path(cls, source_id):
+        return ('sources', source_id)
+
+    @classmethod
     def create(cls, **kwargs):
         return _as_object(
             cls._request('post',
                          'sources', kwargs))
 
+    @classmethod
+    def retrieve(cls, source_id):
+        """Retrieve the source details for the given :param:`source_id`.
+
+        :param source_id: a source id to retrieve.
+        :type source_id: str
+        :rtype: Source
+        """
+        return _as_object(
+            cls._request('get',
+                         cls._instance_path(source_id)))
 
 class Transfer(_MainResource, Base):
     """API class representing a transfer.
