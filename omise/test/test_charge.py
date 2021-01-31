@@ -67,7 +67,8 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
             'id': 'chrg_test',
             'captured': False,
             'authorized': True,
-            'reversed': False
+            'reversed': False,
+            'expired': False
         })
 
     @mock.patch('requests.post')
@@ -667,6 +668,27 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         self.assertRequest(
             api_call,
             'https://api.omise.co/charges/chrg_test/reverse',
+        )
+
+    @mock.patch('requests.post')
+    def test_expire(self, api_call):
+        charge = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "expired": true
+        }""")
+
+        self.assertTrue(isinstance(charge, class_))
+        self.assertFalse(charge.expired)
+        charge.expire()
+
+        self.assertTrue(charge.expired)
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges/chrg_test/expire',
         )
 
     @mock.patch('requests.get')
