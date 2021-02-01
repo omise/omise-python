@@ -218,6 +218,13 @@ class _VaultResource(Base):
         return Request(api_public, api_vault, api_version).send(*args, **kwargs)
 
 
+class _PublicResource(Base):
+
+    @classmethod
+    def _request(cls, *args, **kwargs):
+        return Request(api_public, api_main, api_version).send(*args, **kwargs)
+
+
 class Account(_MainResource, Base):
     """API class representing accounts details.
 
@@ -345,15 +352,16 @@ class BankAccount(Base):
             hex(id(self)))
 
 
-class Capability(_MainResource, Base):
+class Capability(_PublicResource, Base):
     """API class representing capability details.
 
-    This API class is used for retrieving the account capabilities.
+    This API class is used for retrieving the account capabilities. It requires
+    the public key to be set in ``omise.api_public``.
 
     Basic usage::
 
         >>> import omise
-        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> omise.api_public = 'pkey_test_4xs8breq32civvobx15'
         >>> capability = omise.Capability.retrieve()
         <Capability at 0x7f9b242bddd0>
         >>> capability.zero_interest_installments
