@@ -30,6 +30,7 @@ __all__ = [
     'Balance',
     'BankAccount',
     'Card',
+    'Chain',
     'Charge',
     'Collection',
     'Customer',
@@ -65,6 +66,7 @@ def _get_class_for(type):
         'balance': Balance,
         'bank_account': BankAccount,
         'card': Card,
+        'chain': Chain,
         'charge': Charge,
         'customer': Customer,
         'dispute': Dispute,
@@ -536,6 +538,82 @@ class Card(_MainResource, Base):
         :rtype: bool
         """
         return self._attributes.get('deleted', False)
+
+
+class Chain(_MainResource, Base):
+    """API class representing chain details.
+
+    This API class is used for retrieving and revoking chains. Chains represent
+    sub-merchant accounts which have authorized another account to create
+    charges and perform other actions on their behalf.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> chain = omise.Chain.retrieve('acch_test_5lals6ot3vlz6lsnfhn')
+        <Chain id='acch_test_5lals6ot3vlz6lsnfhn' at 0x7fd6689af450>
+        >>> chain.email
+        'john.doe@example.com'
+    """
+
+    @classmethod
+    def _collection_path(cls):
+        return 'chains'
+
+    @classmethod
+    def _instance_path(cls, chain_id):
+        return ('chains', chain_id)
+
+    @classmethod
+    def retrieve(cls, chain_id=None):
+        """Retrieve the sub-merchant chain details for the given
+        :param:`chain_id`. If :param:`chain_id` is not given, all sub-merchant
+        chains will be returned instead.
+
+        :param chain_id: (optional) a chain id to retrieve.
+        :type chain_id: str
+        :rtype: Chain
+        """
+        if chain_id:
+            return _as_object(cls._request('get', cls._instance_path(chain_id)))
+        return _as_object(cls._request('get', cls._collection_path()))
+
+    @classmethod
+    def list(cls):
+        """Return a list of sub-merchant chains belonging to your account.
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(cls._collection_path())
+
+    def reload(self):
+        """Reload the sub-merchant chain details.
+
+        :rtype: Chain
+        """
+        return self._reload_data(
+            self._request('get',
+                          self._instance_path(self._attributes['id'])))
+
+    def revoke(self):
+        """Revoke the sub-merchant chain.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+            >>> chain = omise.Chain.retrieve('acch_test_5lals6ot3vlz6lsnfhn')
+            >>> chain.revoke()
+            <Chain id='acch_test_5lals6ot3vlz6lsnfhn' at 0x7f9c60abdc90>
+            >>> chain.revoked
+            True
+
+        :rtype: Chain
+        """
+
+        path = self._instance_path(self._attributes['id']) + ('revoke',)
+        return self._reload_data(self._request('post', path))
 
 
 class Charge(_MainResource, Base):
