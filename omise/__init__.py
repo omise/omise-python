@@ -1207,6 +1207,26 @@ class Dispute(_MainResource, Base):
                           self._instance_path(self._attributes['id']),
                           changed))
 
+    def accept(self):
+        """Accept the dispute.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+            >>> dspt = omise.Dispute.retrieve('dspt_test_5mr57xawhq7j28az3ak')
+            >>> dspt.status
+            'open'
+            >>> dspt.accept()
+            <Dispute id='dspt_test_5mr57xawhq7j28az3ak' at 0x7ff4fcabddd0>
+            >>> dspt.status
+            'lost'
+
+        :rtype: Dispute
+        """
+        path = self._instance_path(self._attributes['id']) + ('accept',)
+        return self._reload_data(self._request('patch', path))
+
 
 class Event(_MainResource, Base):
     """API class representing an event in an account.
