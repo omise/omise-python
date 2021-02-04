@@ -36,6 +36,7 @@ __all__ = [
     'Collection',
     'Customer',
     'Dispute',
+    'Document',
     'Event',
     'Forex',
     'Link',
@@ -72,6 +73,7 @@ def _get_class_for(type):
         'charge': Charge,
         'customer': Customer,
         'dispute': Dispute,
+        'document': Document,
         'event': Event,
         'forex': Forex,
         'link': Link,
@@ -1104,7 +1106,7 @@ class LazyCollection(object):
 
 
 class Dispute(_MainResource, Base):
-    """API class representing a recipient in an account.
+    """API class representing a dispute in an account.
 
     This API class is used for retrieving and updating a dispute in an
     account for charge back handling.
@@ -1114,7 +1116,7 @@ class Dispute(_MainResource, Base):
         >>> import omise
         >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
         >>> dispute = omise.Dispute.retrieve('dspt_test_4zgf15h89w8t775kcm8')
-        <Recipient id='dspt_test_4zgf15h89w8t775kcm8' at 0x7fd06ce3d5d0>
+        <Dispute id='dspt_test_4zgf15h89w8t775kcm8' at 0x7fd06ce3d5d0>
         >>> dispute.status
         'open'
     """
@@ -1206,6 +1208,82 @@ class Dispute(_MainResource, Base):
             self._request('patch',
                           self._instance_path(self._attributes['id']),
                           changed))
+
+
+class Document(_MainResource, Base):
+    """API class representing a dispute document in an account.
+
+    This API class is used for managing dispute document files. Documents are
+    used to help resolve disputes. Supported file types include PNG, JPG, and
+    PDF.
+
+    Basic usage::
+
+        >>> import omise
+        >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+        >>> dispute = omise.Dispute.retrieve('dspt_test_5mr4ox8e818viqtaqs1')
+        >>> document = dispute.documents.retrieve("docu_test_5mr4oyqphijal1ps9u6")
+        <Document id='docu_test_5mr4oyqphijal1ps9u6' at 0x7ffdbb90d410>
+        >>> document.filename
+        'evidence.png'
+    """
+
+    @classmethod
+    def _collection_path(cls):
+        return 'documents'
+
+    @classmethod
+    def _instance_path(cls, dispute_id, document_id):
+        return ('disputes', dispute_id, 'documents', document_id)
+
+    @classmethod
+    def retrieve(cls, dispute_id, document_id):
+        """Retrieve the document details for the given :param:`document_id`.
+
+        :param dispute_id: a dispute id of a document.
+        :type dispute_id: str
+        :param document_id: a document id to retrieve.
+        :type document_id: str
+        :rtype: Document
+        """
+        return _as_object(cls._request('get', cls._instance_path(dispute_id, document_id)))
+
+    def reload(self):
+        """Reload the document details.
+
+        :rtype: Document
+        """
+        return self._reload_data(
+            self._request('get',
+                          self._attributes['location']))
+
+    def destroy(self):
+        """Delete the document and unassociated it from the dispute.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+            >>> dispute = omise.Dispute.retrieve('dspt_test_5mr4ox8e818viqtaqs1')
+            >>> document = dispute.documents.retrieve("docu_test_5mr4oyqphijal1ps9u6")
+            >>> document.destroy()
+            <Document id='docu_test_5mr4oyqphijal1ps9u6' at 0x7ffdbb90d410>
+            >>> document.destroyed
+            True
+
+        :rtype: Document
+        """
+        return self._reload_data(
+            self._request('delete',
+                          self._attributes['location']))
+
+    @property
+    def destroyed(self):
+        """Returns ``True`` if document has been deleted.
+
+        :rtype: bool
+        """
+        return self._attributes.get('deleted', False)
 
 
 class Event(_MainResource, Base):
