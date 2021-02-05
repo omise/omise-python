@@ -208,6 +208,9 @@ class _MainResource(Base):
     def _request(cls, *args, **kwargs):
         return Request(api_secret, api_main, api_version).send(*args, **kwargs)
 
+    def _upload(cls, *args, **kwargs):
+        return Request(api_secret, api_main, api_version).send_file(*args, **kwargs)
+
     def _nested_object_path(self, association_cls):
         return (
             self.__class__._collection_path(),
@@ -1173,6 +1176,13 @@ class Dispute(_MainResource, Base):
         """
         return LazyCollection(cls._collection_path("closed"))
 
+    def list_documents(self):
+        """Returns all documents that belong to a given dispute.
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(self._nested_object_path(Document))
+
     def reload(self):
         """Reload the dispute details.
 
@@ -1208,6 +1218,21 @@ class Dispute(_MainResource, Base):
             self._request('patch',
                           self._instance_path(self._attributes['id']),
                           changed))
+
+    def upload_document(self, document):
+        """Add a dispute evidence document.
+
+        See the `create a document`_ section in the API documentation for list
+        of available arguments.
+
+        :rtype: Document
+
+        .. _create a document: https://www.omise.co/documents-api#create
+        """
+        path = self._instance_path(self._attributes['id']) + ('documents',)
+        document = _as_object(self._upload('post', path, files=document))
+        self.reload()
+        return document
 
 
 class Document(_MainResource, Base):

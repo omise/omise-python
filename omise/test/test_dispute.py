@@ -1,5 +1,6 @@
 import mock
 import unittest
+import tempfile
 
 from .helper import _ResourceMixin
 
@@ -169,3 +170,87 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
             'https://api.omise.co/disputes/dspt_test',
             {'message': 'Foobar Baz'}
         )
+
+    @mock.patch('requests.get')
+    @mock.patch('requests.post')
+    def test_upload_document(self, api_call, reload_call):
+        dispute = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "document",
+            "livemode": false,
+            "id": "docu_test",
+            "deleted": false,
+            "filename": "evidence.png",
+            "location": "/disputes/dspt_test/documents/docu_test",
+            "download_uri": null,
+            "created_at": "2021-02-05T10:40:32Z"
+        }""")
+
+        self.mockResponse(reload_call, """{
+            "object": "dispute",
+            "id": "dspt_test",
+            "livemode": false,
+            "location": "/disputes/dspt_test",
+            "currency": "THB",
+            "amount": 1101000,
+            "funding_amount": 1101000,
+            "funding_currency": "THB",
+            "metadata": {
+            },
+            "charge": "chrg_test_5m7wj8yi1pa9vlk9bq8",
+            "documents": {
+            "object": "list",
+            "data": [
+                {
+                "object": "document",
+                "livemode": false,
+                "id": "docu_test",
+                "deleted": false,
+                "filename": "evidence.png",
+                "location": "/disputes/dspt_test/documents/docu_test",
+                "download_uri": null,
+                "created_at": "2021-02-05T10:40:32Z"
+                }
+            ],
+            "limit": 20,
+            "offset": 0,
+            "total": 1,
+            "location": "/disputes/dspt_test/documents",
+            "order": "chronological",
+            "from": "1970-01-01T00:00:00Z",
+            "to": "2021-02-05T10:42:02Z"
+            },
+            "transactions": [
+            {
+                "object": "transaction",
+                "id": "trxn_test",
+                "livemode": false,
+                "currency": "THB",
+                "amount": 1101000,
+                "location": "/transactions/trxn_test",
+                "direction": "debit",
+                "key": "dispute.started.debit",
+                "origin": "dspt_test",
+                "transferable_at": "2021-02-04T12:08:04Z",
+                "created_at": "2021-02-04T12:08:04Z"
+            }
+            ],
+            "admin_message": null,
+            "message": null,
+            "reason_code": "goods_or_services_not_provided",
+            "reason_message": "Services not provided or Merchandise not received",
+            "status": "open",
+            "closed_at": null,
+            "created_at": "2021-02-04T12:08:04Z"
+        }""")
+
+        self.assertTrue(isinstance(dispute, class_))
+
+        files = tempfile.TemporaryFile()
+        document = dispute.upload_document(files)
+        files.close()
+        self.assertEqual(dispute.id, 'dspt_test')
+        self.assertEqual(document.filename, 'evidence.png')
+
+        self.assertUpload(api_call, 'https://api.omise.co/disputes/dspt_test/documents', files)

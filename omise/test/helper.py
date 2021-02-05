@@ -32,6 +32,17 @@ class _RequestAssertable(object):
             headers=headers,
             auth=(mock.ANY, ''))
 
+    def assertUpload(self, api_call, url, files=None, headers=None):
+        if files is None:
+            files = {}
+        if headers is None:
+            headers = mock.ANY
+        api_call.assert_called_with(
+            url,
+            files=files,
+            headers=headers,
+            auth=(mock.ANY, ''))
+
 
 class _ResourceMixin(_RequestAssertable):
 
