@@ -815,11 +815,18 @@ class Charge(_MainResource, Base):
         return refund
 
     def list_refunds(self):
-        """Return all refund that belongs to the charge
+        """Return all refunds that belong to the charge
 
         :rtype: LazyCollection
         """
         return LazyCollection(self._nested_object_path(Refund))
+
+    def list_events(self):
+        """Return all events that belong to the charge
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(self._nested_object_path(Event))
 
     @classmethod
     def schedule(cls):
