@@ -102,11 +102,39 @@ class Request(object):
             errors._raise_from_data(response)
         return response
 
+    def send_file(self, method, path, files=None, headers=None):
+        request_path = self._build_path(path)
+        request_files = self._build_files(files)
+        request_headers = self._build_file_header(headers)
+
+        logger.info('Sending HTTP request: %s %s', method.upper(), request_path)
+        logger.debug('Authorization: %s', self.api_key)
+        logger.debug('Files: %s', request_files)
+        logger.debug('Headers: %s', request_headers)
+
+        response = getattr(requests, method)(
+            request_path,
+            files=request_files,
+            headers=request_headers,
+            auth=(self.api_key, '')
+        ).json()
+
+        logger.info('Received HTTP response: %s', response)
+
+        if response.get('object') == 'error':
+            errors._raise_from_data(response)
+        return response
+
     def _build_path(self, path):
         if not hasattr(path, '__iter__') or isinstance(path, basestring):
             path = (path,)
         path = map(str, path)
         return urlparse.urljoin(self.api_base, '/'.join(path))
+
+    def _build_files(self, files):
+        if files is None:
+            files = {}
+        return files
 
     def _build_payload(self, payload):
         if payload is None:
@@ -118,6 +146,15 @@ class Request(object):
             headers = {}
         headers['Accept'] = 'application/json'
         headers['Content-Type'] = 'application/json'
+        if self.api_version is not None:
+            headers['Omise-Version'] = self.api_version
+        headers['User-Agent'] = 'OmisePython/%s' % version.__VERSION__
+        return headers
+
+    def _build_file_header(self, headers):
+        if headers is None:
+            headers = {}
+        headers['Accept'] = 'application/json'
         if self.api_version is not None:
             headers['Omise-Version'] = self.api_version
         headers['User-Agent'] = 'OmisePython/%s' % version.__VERSION__
