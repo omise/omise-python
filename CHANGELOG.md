@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.0] - 2021-02-10
+
+* [Added] Add tests for list method (https://github.com/omise/omise-python/pull/50)
+* [Added] Add list events method for Charge (https://github.com/omise/omise-python/pull/48)
+* [Added] Add accept method for Dispute (https://github.com/omise/omise-python/pull/47)
+* [Added] Add Document API (https://github.com/omise/omise-python/pull/46)
+* [Added] Add Chain API (https://github.com/omise/omise-python/pull/45)
+* [Added] Add Capability API (https://github.com/omise/omise-python/pull/44)
+* [Added] Add expire method for Charge (https://github.com/omise/omise-python/pull/43)
+* [Added] Add retrieve method for Source (https://github.com/omise/omise-python/pull/42)
+
 ## [0.10.0] - 2021-01-27
 
 * [Added] Add update method for Account (https://github.com/omise/omise-python/pull/34)
