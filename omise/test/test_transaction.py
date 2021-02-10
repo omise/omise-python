@@ -14,6 +14,10 @@ class TransactionTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     @mock.patch('requests.get')
     def test_retrieve(self, api_call):
         class_ = self._getTargetClass()
@@ -100,3 +104,47 @@ class TransactionTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(transactions[1].type, 'debit')
         self.assertTrue(transactions[1].amount, 100025)
         self.assertRequest(api_call, 'https://api.omise.co/transactions')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2014-10-27T14:55:29+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 2,
+            "data": [
+                {
+                    "object": "transaction",
+                    "id": "trxn_test_1",
+                    "type": "credit",
+                    "amount": 9635024,
+                    "currency": "thb",
+                    "created": "2014-10-27T06:58:56Z"
+                },
+                {
+                    "object": "transaction",
+                    "id": "trxn_test_2",
+                    "type": "debit",
+                    "amount": 100025,
+                    "currency": "thb",
+                    "created": "2014-10-27T07:02:54Z"
+                }
+            ]
+        }""")
+
+        transactions = class_.list()
+        self.assertTrue(isinstance(transactions, lazy_collection_class_))
+
+        transactions = list(transactions)
+        self.assertTrue(isinstance(transactions[0], class_))
+        self.assertTrue(transactions[0].id, 'trxn_test_1')
+        self.assertTrue(transactions[0].type, 'credit')
+        self.assertTrue(transactions[0].amount, 9635024)
+        self.assertTrue(isinstance(transactions[1], class_))
+        self.assertTrue(transactions[1].id, 'trxn_test_2')
+        self.assertTrue(transactions[1].type, 'debit')
+        self.assertTrue(transactions[1].amount, 100025)

@@ -14,6 +14,10 @@ class TransferTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'object': 'transfer',
@@ -141,6 +145,43 @@ class TransferTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(transfers[0].id, 'trsf_test')
         self.assertTrue(transfers[0].amount, 96350)
         self.assertRequest(api_call, 'https://api.omise.co/transfers')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2014-10-27T11:36:24+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 1,
+            "data": [
+                {
+                    "object": "transfer",
+                    "id": "trsf_test",
+                    "livemode": false,
+                    "location": "/transfers/trsf_test",
+                    "sent": false,
+                    "paid": false,
+                    "amount": 96350,
+                    "currency": "thb",
+                    "failure_code": null,
+                    "failure_message": null,
+                    "transaction": null,
+                    "created": "2014-11-18T11:31:26Z"
+                }
+            ]
+        }""")
+
+        transfers = class_.list()
+        self.assertTrue(isinstance(transfers, lazy_collection_class_))
+
+        transfers = list(transfers)
+        self.assertTrue(isinstance(transfers[0], class_))
+        self.assertTrue(transfers[0].id, 'trsf_test')
+        self.assertTrue(transfers[0].amount, 96350)
 
     @mock.patch('requests.patch')
     def test_update(self, api_call):

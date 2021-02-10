@@ -13,6 +13,10 @@ class EventTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _getChargeClass(self):
         from .. import Charge
         return Charge
@@ -138,3 +142,34 @@ class EventTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(events[0].id, 'evnt_test')
         self.assertTrue(events[0].key, 'charge.create')
         self.assertRequest(api_call, 'https://api.omise.co/events')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2015-06-02T05:41:53+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 1,
+            "data": [
+                {
+                    "object": "event",
+                    "id": "evnt_test",
+                    "livemode": false,
+                    "location": "/events/evnt_test",
+                    "key": "charge.create",
+                    "created": "2015-06-02T05:41:53Z"
+                }
+            ]
+        }""")
+
+        events = class_.list()
+        self.assertTrue(isinstance(events, lazy_collection_class_))
+
+        events = list(events)
+        self.assertTrue(isinstance(events[0], class_))
+        self.assertTrue(events[0].id, 'evnt_test')
+        self.assertTrue(events[0].key, 'charge.create')
