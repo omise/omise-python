@@ -22,6 +22,10 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'card': {
@@ -851,3 +855,51 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         self.assertEqual(schedules[0].start_date, '2017-06-02')
         self.assertEqual(schedules[0].end_date, '2018-05-01')
         self.assertRequest(api_call, 'https://api.omise.co/charges/schedules')
+
+    @mock.patch('requests.get')
+    def test_list_events(self, api_call):
+        charge = self._makeOne()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "data": [
+                {
+                    "object": "event",
+                    "id": "evnt_test",
+                    "livemode": false,
+                    "location": "/events/evnt_test",
+                    "webhook_deliveries": [
+                        {
+                            "object": "webhook_delivery",
+                            "id": "whdl_test",
+                            "uri": "https://www.omise.co",
+                            "status": 200
+                        }
+                    ],
+                    "data": [
+                        {
+                            "object": "charge",
+                            "id": "chrg_test",
+                            "location": "/charges/chrg_test",
+                            "amount": 100000
+                        }
+                    ],
+                    "key": "charge.create",
+                    "created_at": "2021-01-29T02:05:20Z"
+                }
+            ],
+            "limit": 20,
+            "offset": 0,
+            "total": 2,
+            "location": null,
+            "order": "chronological",
+            "from": "1970-01-01T00:00:00Z",
+            "to": "2021-02-02T03:16:57Z"
+        }""")
+
+        events = charge.list_events()
+        self.assertTrue(isinstance(events, lazy_collection_class_))
+
+        events = list(events)
+        self.assertTrue(events[0].id, 'evnt_test')
+        self.assertTrue(events[0].key, 'charge.create')
