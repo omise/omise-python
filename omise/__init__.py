@@ -820,11 +820,18 @@ class Charge(_MainResource, Base):
         return refund
 
     def list_refunds(self):
-        """Return all refund that belongs to the charge
+        """Return all refunds that belong to the charge
 
         :rtype: LazyCollection
         """
         return LazyCollection(self._nested_object_path(Refund))
+
+    def list_events(self):
+        """Return all events that belong to the charge
+
+        :rtype: LazyCollection
+        """
+        return LazyCollection(self._nested_object_path(Event))
 
     @classmethod
     def schedule(cls):
@@ -1218,6 +1225,26 @@ class Dispute(_MainResource, Base):
             self._request('patch',
                           self._instance_path(self._attributes['id']),
                           changed))
+
+    def accept(self):
+        """Accept the dispute.
+
+        Basic usage::
+
+            >>> import omise
+            >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
+            >>> dspt = omise.Dispute.retrieve('dspt_test_5mr57xawhq7j28az3ak')
+            >>> dspt.status
+            'open'
+            >>> dspt.accept()
+            <Dispute id='dspt_test_5mr57xawhq7j28az3ak' at 0x7ff4fcabddd0>
+            >>> dspt.status
+            'lost'
+
+        :rtype: Dispute
+        """
+        path = self._instance_path(self._attributes['id']) + ('accept',)
+        return self._reload_data(self._request('patch', path))
 
     def upload_document(self, document):
         """Add a dispute evidence document.

@@ -14,6 +14,10 @@ class ScheduleTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             "object": "schedule",
@@ -282,6 +286,83 @@ class ScheduleTest(_ResourceMixin, unittest.TestCase):
         self.assertEqual(schedules[0].start_date, '2017-06-02')
         self.assertEqual(schedules[0].end_date, '2018-05-01')
         self.assertRequest(api_call, 'https://api.omise.co/schedules')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2017-06-02T12:34:43+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 1,
+            "order": "chronological",
+            "location": "/schedules",
+            "data": [
+                {
+                    "object": "schedule",
+                    "id": "schd_test",
+                    "livemode": false,
+                    "location": "/schedules/schd_test",
+                    "status": "active",
+                    "deleted": false,
+                    "every": 1,
+                    "period": "month",
+                    "on": {
+                        "weekday_of_month": "2nd_monday"
+                    },
+                    "in_words": "Every 1 month(s) on the 2nd Monday",
+                    "start_date": "2017-06-02",
+                    "end_date": "2018-05-01",
+                    "charge": {
+                        "amount": 100000,
+                        "currency": "thb",
+                        "description": "Membership fee",
+                        "customer": "cust_test_58655j2ez4elik6t2xc",
+                        "card": null
+                    },
+                    "occurrences": {
+                        "object": "list",
+                        "from": "1970-01-01T07:00:00+07:00",
+                        "to": "2017-06-02T19:14:21+07:00",
+                        "offset": 0,
+                        "limit": 20,
+                        "total": 0,
+                        "order": null,
+                        "location": "/schedules/schd_test/occurrences",
+                        "data": []
+                    },
+                    "next_occurrence_dates": [
+                        "2017-06-12",
+                        "2017-07-10",
+                        "2017-08-14",
+                        "2017-09-11",
+                        "2017-10-09",
+                        "2017-11-13",
+                        "2017-12-11",
+                        "2018-01-08",
+                        "2018-02-12",
+                        "2018-03-12",
+                        "2018-04-09"
+                    ],
+                    "created": "2017-06-02T12:14:21Z"
+                }
+            ]
+        }""")
+
+        schedules = class_.list()
+        self.assertTrue(isinstance(schedules, lazy_collection_class_))
+
+        schedules = list(schedules)
+        self.assertTrue(isinstance(schedules[0], class_))
+        self.assertTrue(schedules[0].id, 'schd_test')
+        self.assertEqual(schedules[0].every, 1)
+        self.assertEqual(schedules[0].period, 'month')
+        self.assertEqual(schedules[0].status, 'active')
+        self.assertEqual(schedules[0].start_date, '2017-06-02')
+        self.assertEqual(schedules[0].end_date, '2018-05-01')
 
     @mock.patch('requests.get')
     def test_reload(self, api_call):

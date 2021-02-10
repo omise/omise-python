@@ -18,6 +18,10 @@ class CustomerTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'object': 'customer',
@@ -283,6 +287,68 @@ class CustomerTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(isinstance(customers[0], class_))
         self.assertTrue(customers[0].email, 'john.smith@example.com')
         self.assertRequest(api_call, 'https://api.omise.co/customers')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2014-10-27T11:36:24+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 1,
+            "data": [
+                {
+                    "object": "customer",
+                    "id": "cust_test",
+                    "livemode": false,
+                    "location": "/customers/cust_test",
+                    "default_card": "card_test",
+                    "email": "john.smith@example.com",
+                    "description": "John Doe (id: 30)",
+                    "created": "2014-10-24T08:26:46Z",
+                    "cards": {
+                        "object": "list",
+                        "from": "1970-01-01T07:00:00+07:00",
+                        "to": "2014-10-24T15:32:31+07:00",
+                        "offset": 0,
+                        "limit": 20,
+                        "total": 1,
+                        "order": null,
+                        "data": [
+                            {
+                                "object": "card",
+                                "id": "card_test",
+                                "livemode": false,
+                                "location": "/customers/cust_test/cards/card_test",
+                                "country": "",
+                                "city": null,
+                                "postal_code": null,
+                                "financing": "",
+                                "last_digits": "4242",
+                                "brand": "Visa",
+                                "expiration_month": 9,
+                                "expiration_year": 2017,
+                                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                                "name": "Test card",
+                                "created": "2014-10-24T08:26:07Z"
+                            }
+                        ],
+                        "location": "/customers/cust_test/cards"
+                    }
+                }
+            ]
+        }""")
+
+        customers = class_.list()
+        self.assertTrue(isinstance(customers, lazy_collection_class_))
+
+        customers = list(customers)
+        self.assertTrue(isinstance(customers[0], class_))
+        self.assertTrue(customers[0].id, 'cust_test')
+        self.assertTrue(customers[0].email, 'john.smith@example.com')
 
     @mock.patch('requests.patch')
     def test_update(self, api_call):

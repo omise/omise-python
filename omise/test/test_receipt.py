@@ -14,6 +14,10 @@ class ReceiptTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'object': 'receipt',
@@ -141,3 +145,59 @@ class ReceiptTest(_ResourceMixin, unittest.TestCase):
             api_call,
             'https://api.omise.co/receipts'
         )
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T00:00:00Z",
+            "to": "2017-10-11T23:59:59Z",
+            "offset": 0,
+            "limit": 20,
+            "total": 1,
+            "order": "chronological",
+            "location": "/receipts",
+            "data": [
+                {
+                    "object": "receipt",
+                    "id": "rcpt_test",
+                    "number": "OMTH201710110001",
+                    "location": "/receipts/rcpt_test",
+                    "date": "2017-10-11T16:59:59Z",
+                    "customer_name": "John Doe",
+                    "customer_address": "Crystal Design Center (CDC)",
+                    "customer_tax_id": "Tax ID 1234",
+                    "customer_email": "john@omise.co",
+                    "customer_statement_name": "John",
+                    "company_name": "Omise Company Limited",
+                    "company_address": "Crystal Design Center (CDC)",
+                    "company_tax_id": "0000000000000",
+                    "charge_fee": 1315,
+                    "voided_fee": 0,
+                    "transfer_fee": 0,
+                    "subtotal": 1315,
+                    "vat": 92,
+                    "wht": 0,
+                    "total": 1407,
+                    "credit_note": false,
+                    "currency": "thb"
+                }
+            ]
+        }""")
+
+        receipts = class_.list()
+        self.assertTrue(isinstance(receipts, lazy_collection_class_))
+
+        receipts = list(receipts)
+        self.assertTrue(isinstance(receipts[0], class_))
+        self.assertEqual(receipts[0].id, 'rcpt_test')
+        self.assertEqual(receipts[0].number, 'OMTH201710110001')
+        self.assertEqual(receipts[0].company_tax_id, '0000000000000')
+        self.assertEqual(receipts[0].charge_fee, 1315)
+        self.assertEqual(receipts[0].voided_fee, 0)
+        self.assertEqual(receipts[0].transfer_fee, 0)
+        self.assertEqual(receipts[0].subtotal, 1315)
+        self.assertEqual(receipts[0].total, 1407)
+        self.assertEqual(receipts[0].currency, 'thb')

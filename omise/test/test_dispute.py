@@ -15,6 +15,10 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'object': 'dispute',
@@ -23,7 +27,7 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
             'location': '/disputes/dspt_test',
             'amount': 100000,
             'currency': 'thb',
-            'status': 'pending',
+            'status': 'open',
             'message': None,
             'charge': 'chrg_test',
             'created': '2015-03-23T05:24:39Z'
@@ -142,6 +146,41 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(disputes[0].status, 'closed')
         self.assertRequest(api_call, 'https://api.omise.co/disputes/closed')
 
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2015-03-23T05:24:39+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 1,
+            "data": [
+                {
+                    "object": "dispute",
+                    "id": "dspt_test",
+                    "livemode": false,
+                    "location": "/disputes/dspt_test",
+                    "amount": 100000,
+                    "currency": "thb",
+                    "status": "pending",
+                    "message": "Foobar Baz",
+                    "charge": "chrg_test",
+                    "created": "2015-03-23T05:24:39Z"
+                }
+            ]
+        }""")
+
+        disputes = class_.list()
+        self.assertTrue(isinstance(disputes, lazy_collection_class_))
+
+        disputes = list(disputes)
+        self.assertTrue(isinstance(disputes[0], class_))
+        self.assertTrue(disputes[0].id, 'dspt_test')
+        self.assertTrue(disputes[0].amount, 100000)
+
     @mock.patch('requests.patch')
     def test_update(self, api_call):
         dispute = self._makeOne()
@@ -169,6 +208,27 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
             api_call,
             'https://api.omise.co/disputes/dspt_test',
             {'message': 'Foobar Baz'}
+        )
+
+    @mock.patch('requests.patch')
+    def test_accept(self, api_call):
+        dispute = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "dispute",
+            "id": "dspt_test",
+            "livemode": false,
+            "status": "lost"
+        }""")
+
+        self.assertTrue(isinstance(dispute, class_))
+        self.assertEqual(dispute.status, 'open')
+
+        dispute.accept()
+        self.assertEqual(dispute.status, 'lost')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/disputes/dspt_test/accept'
         )
 
     @mock.patch('requests.get')
@@ -252,5 +312,4 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
         files.close()
         self.assertEqual(dispute.id, 'dspt_test')
         self.assertEqual(document.filename, 'evidence.png')
-
         self.assertUpload(api_call, 'https://api.omise.co/disputes/dspt_test/documents', files)
