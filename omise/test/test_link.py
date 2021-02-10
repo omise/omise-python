@@ -14,6 +14,10 @@ class LinkTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'object': 'link',
@@ -205,6 +209,81 @@ class LinkTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(links[1].id, 'link_test_2')
         self.assertTrue(links[1].amount, 20000)
         self.assertRequest(api_call, 'https://api.omise.co/links')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "from": "1970-01-01T07:00:00+07:00",
+            "to": "2014-11-20T14:17:24+07:00",
+            "offset": 0,
+            "limit": 20,
+            "total": 2,
+            "data": [
+                {
+                    "object": "link",
+                    "id": "link_test_1",
+                    "livemode": false,
+                    "location": "/links/link_test_1",
+                    "amount": 10000,
+                    "currency": "thb",
+                    "used": false,
+                    "multiple": false,
+                    "description": "Description of order-384",
+                    "title": "Order-384",
+                    "charges": {
+                        "object": "list",
+                        "from": "1970-01-01T07:00:00+07:00",
+                        "to": "2017-03-03T19:22:33+07:00",
+                        "offset": 0,
+                        "limit": 20,
+                        "total": 0,
+                        "order": null,
+                        "location": "/links/link_test_1/charges",
+                        "data": []
+                    },
+                    "payment_uri": "http://link.example.com/0BB268C6",
+                    "created": "2017-03-03T12:16:48Z"
+                },
+                {
+                    "object": "link",
+                    "id": "link_test_2",
+                    "livemode": false,
+                    "location": "/links/link_test_2",
+                    "amount": 20000,
+                    "currency": "thb",
+                    "used": false,
+                    "multiple": false,
+                    "description": "Description of order-385",
+                    "title": "Order-385",
+                    "charges": {
+                        "object": "list",
+                        "from": "1970-01-01T07:00:00+07:00",
+                        "to": "2017-03-03T19:22:33+07:00",
+                        "offset": 0,
+                        "limit": 20,
+                        "total": 0,
+                        "order": null,
+                        "location": "/links/link_test_2/charges",
+                        "data": []
+                    },
+                    "payment_uri": "http://link.example.com/0BB268C6",
+                    "created": "2017-03-03T12:16:48Z"
+                }
+            ]
+        }""")
+
+        links = class_.list()
+        self.assertTrue(isinstance(links, lazy_collection_class_))
+
+        links = list(links)
+        self.assertTrue(isinstance(links[0], class_))
+        self.assertTrue(links[0].id, 'link_test_1')
+        self.assertTrue(links[0].amount, 10000)
+        self.assertTrue(links[1].id, 'link_test_2')
+        self.assertTrue(links[1].amount, 20000)
 
     @mock.patch('requests.delete')
     def test_destroy(self, api_call):

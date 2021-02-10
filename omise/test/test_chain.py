@@ -14,6 +14,10 @@ class ChainTest(_ResourceMixin, unittest.TestCase):
         from .. import Collection
         return Collection
 
+    def _getLazyCollectionClass(self):
+        from .. import LazyCollection
+        return LazyCollection
+
     def _makeOne(self):
         return self._getTargetClass().from_data({
             'object': 'chain',
@@ -93,6 +97,53 @@ class ChainTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(chains[1].id, 'acch_test_2')
         self.assertTrue(chains[1].email, 'john.doe@example.com')
         self.assertRequest(api_call, 'https://api.omise.co/chains')
+
+    @mock.patch('requests.get')
+    def test_list(self, api_call):
+        class_ = self._getTargetClass()
+        lazy_collection_class_ = self._getLazyCollectionClass()
+        self.mockResponse(api_call, """{
+            "object": "list",
+            "data": [
+              {
+                "object": "chain",
+                "id": "acch_test_1",
+                "livemode": false,
+                "location": "/chains/acch_test_1",
+                "revoked": true,
+                "email": "jenny.doe@example.com",
+                "key": "",
+                "created_at": "2020-09-22T06:08:38Z"
+              },
+              {
+                "object": "chain",
+                "id": "acch_test_2",
+                "livemode": false,
+                "location": "/chains/acch_test_2",
+                "revoked": false,
+                "email": "john.doe@example.com",
+                "key": "ckey_test",
+                "created_at": "2021-02-02T03:12:43Z"
+              }
+            ],
+            "limit": 20,
+            "offset": 0,
+            "total": 2,
+            "location": null,
+            "order": "chronological",
+            "from": "1970-01-01T00:00:00Z",
+            "to": "2021-02-02T03:16:57Z"
+        }""")
+
+        chains = class_.list()
+        self.assertTrue(isinstance(chains, lazy_collection_class_))
+
+        chains = list(chains)
+        self.assertTrue(isinstance(chains[0], class_))
+        self.assertTrue(chains[0].id, 'acch_test_1')
+        self.assertTrue(chains[0].email, 'jenny.doe@example.com')
+        self.assertTrue(chains[1].id, 'acch_test_2')
+        self.assertTrue(chains[1].email, 'john.doe@example.com')
 
     @mock.patch('requests.get')
     def test_reload(self, api_call):
