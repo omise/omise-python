@@ -26,7 +26,7 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
             'location': '/disputes/dspt_test',
             'amount': 100000,
             'currency': 'thb',
-            'status': 'pending',
+            'status': 'open',
             'message': None,
             'charge': 'chrg_test',
             'created': '2015-03-23T05:24:39Z'
@@ -207,4 +207,25 @@ class DisputeTest(_ResourceMixin, unittest.TestCase):
             api_call,
             'https://api.omise.co/disputes/dspt_test',
             {'message': 'Foobar Baz'}
+        )
+
+    @mock.patch('requests.patch')
+    def test_accept(self, api_call):
+        dispute = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "dispute",
+            "id": "dspt_test",
+            "livemode": false,
+            "status": "lost"
+        }""")
+
+        self.assertTrue(isinstance(dispute, class_))
+        self.assertEqual(dispute.status, 'open')
+
+        dispute.accept()
+        self.assertEqual(dispute.status, 'lost')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/disputes/dspt_test/accept'
         )
