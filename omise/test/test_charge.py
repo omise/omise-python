@@ -268,6 +268,9 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
             "amount": 100000,
             "currency": "thb",
             "description": "Order-384",
+            "metadata": {
+                "order_id": "384"
+            },
             "capture": false,
             "authorized": true,
             "reversed": false,
@@ -314,6 +317,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         self.assertEqual(charge.amount, 100000)
         self.assertEqual(charge.currency, 'thb')
         self.assertEqual(charge.description, 'Order-384')
+        self.assertEqual(charge.metadata.order_id, '384')
         self.assertEqual(charge.ip, '127.0.0.1')
         self.assertEqual(charge.card.id, 'card_test')
         self.assertEqual(charge.card.last_digits, '4242')

@@ -74,6 +74,9 @@ class TransferTest(_ResourceMixin, unittest.TestCase):
             "paid": false,
             "amount": 100000,
             "currency": "thb",
+            "metadata": {
+                "recipient_name": "Somchai"
+            },
             "failure_code": null,
             "failure_message": null,
             "transaction": null,
@@ -87,6 +90,7 @@ class TransferTest(_ResourceMixin, unittest.TestCase):
         self.assertFalse(transfer.paid)
         self.assertEqual(transfer.id, 'trsf_test')
         self.assertEqual(transfer.amount, 100000)
+        self.assertEqual(transfer.metadata.recipient_name, 'Somchai')
         self.assertEqual(transfer.transaction, None)
         self.assertRequest(api_call, 'https://api.omise.co/transfers/trsf_test')
 
