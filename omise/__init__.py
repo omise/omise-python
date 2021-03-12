@@ -103,7 +103,7 @@ def _as_object(data):
     if isinstance(data, list):
         return [_as_object(i) for i in data]
     elif isinstance(data, dict):
-        class_ = _get_class_for(data['object'])
+        class_ = _get_class_for(data.get('object'))
         if not class_:
             class_ = Base
         return class_.from_data(data)
