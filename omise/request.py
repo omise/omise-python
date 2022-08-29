@@ -85,7 +85,11 @@ class Request(object):
         request_headers = self._build_headers(headers)
 
         logger.info('Sending HTTP request: %s %s', method.upper(), request_path)
-        logger.debug('Authorization: %s', self.api_key)
+
+        # Replacing characters with * other than the first 4 characters
+        display_key = self.api_key[:4] + (len(self.api_key) - 4)*'*'
+
+        logger.debug('Authorization: %s', display_key)
         logger.debug('Payload: %s', request_payload)
         logger.debug('Headers: %s', request_headers)
 
