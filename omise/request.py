@@ -85,7 +85,6 @@ class Request(object):
         request_headers = self._build_headers(headers)
 
         logger.info('Sending HTTP request: %s %s', method.upper(), request_path)
-        logger.debug('Authorization: %s', self.api_key)
         logger.debug('Payload: %s', request_payload)
         logger.debug('Headers: %s', request_headers)
 
@@ -108,7 +107,6 @@ class Request(object):
         request_headers = self._build_file_header(headers)
 
         logger.info('Sending HTTP request: %s %s', method.upper(), request_path)
-        logger.debug('Authorization: %s', self.api_key)
         logger.debug('Files: %s', request_files)
         logger.debug('Headers: %s', request_headers)
 
