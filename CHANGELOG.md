@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.12.0] - 2022-01-11
+
+* [Changed] Allow access to metadata (https://github.com/omise/omise-python/pull/53)
+* [Removed] Removed logging secret key in clear text (https://github.com/omise/omise-python/pull/56)
+
 ## [0.11.0] - 2021-02-10
 
 * [Added] Add tests for list method (https://github.com/omise/omise-python/pull/50)
