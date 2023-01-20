@@ -25,5 +25,5 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip twine wheel
-        python setup.py bdist_wheel
+        python setup.py sdist bdist_wheel
         twine upload --repository-url https://test.pypi.org/legacy/ dist/* --verbose --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }}
