@@ -1,0 +1,29 @@
+name: Publish
+
+on:
+  push:
+
+# on:
+#   release:
+#     types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Build and Upload
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip twine wheel
+        python setup.py bdist_wheel
+        twine upload dist/* --verbose --username __token__ --password ${{ secrets.ABCD_TOKEN }}
