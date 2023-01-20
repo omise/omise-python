@@ -1,11 +1,8 @@
 name: Publish
 
 on:
-  push:
-
-# on:
-#   release:
-#     types: [created]
+  release:
+    types: [created]
 
 jobs:
   publish:
@@ -26,4 +23,4 @@ jobs:
         source venv/bin/activate
         pip install --upgrade pip twine wheel
         python setup.py sdist bdist_wheel
-        twine upload --repository-url https://test.pypi.org/legacy/ dist/* --verbose --username __token__ --password ${{ secrets.TEST_PYPI_TOKEN }}
+        twine upload dist/* --verbose --username __token__ --password ${{ secrets.PYPI_TOKEN }}
