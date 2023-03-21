@@ -279,7 +279,7 @@ class Account(_MainResource, Base):
             >>> import omise
             >>> omise.api_secret = 'skey_test_4xs8breq3htbkj03d2x'
             >>> account = omise.Account.retrieve()
-            >>> account.update(webhook_uri='https://omise-flask-example.herokuapp.com/webhook')
+            >>> account.update(webhook_uri='https://omise.co/webhook')
             <Account id='account_test_5kms3d70v77fs5c37v6' at 0x108cec240>
 
         :param \*\*kwargs: arguments to update an account.
