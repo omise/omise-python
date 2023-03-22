@@ -79,8 +79,8 @@ class AccountTest(_ResourceMixin, unittest.TestCase):
           "auto_activate_recipients": true,
           "chain_enabled": true,
           "zero_interest_installments": true,
-          "chain_return_uri": "https://omise-flask-example.herokuapp.com",
-          "webhook_uri": "https://omise-flask-example.herokuapp.com/webhook",
+          "chain_return_uri": "https://omise.co",
+          "webhook_uri": "https://omise.co/webhook",
           "metadata_export_keys": {
             "charge": [
               "color",
