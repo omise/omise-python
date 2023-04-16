@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y curl git-core make build-essential libr
 
 ## install pyenv
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl https://pyenv.run | bash
 ENV PATH="/root/.pyenv/bin:$PATH"
 RUN pyenv install 2.7.17
