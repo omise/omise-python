@@ -24,7 +24,7 @@ jobs:
       run: coverage xml
     - name: Check coverage.xml
       run: |
-        head coverage.xml
+        cat coverage.xml
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
