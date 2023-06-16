@@ -22,9 +22,6 @@ jobs:
       run: coverage run setup.py test
     - name: Generate report
       run: coverage xml
-    - name: Check coverage.xml
-      run: |
-        cat coverage.xml
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
