@@ -21,10 +21,10 @@ jobs:
     - name: Run Test
       run: coverage run setup.py test
     - name: Generate report
-      run: coverage json
-    - name: Check coverage.json
+      run: coverage xml
+    - name: Check coverage.xml
       run: |
-        head coverage.json
+        head coverage.xml
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
