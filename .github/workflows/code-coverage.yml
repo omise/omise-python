@@ -18,7 +18,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip .[tests]
     - name: Run Test
-      run: coverage run setup.py test
+      run: coverage run python -m unittest
     - name: Generate report
       run: coverage xml
     - name: SonarCloud Scan
