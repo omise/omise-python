@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.13.0] - 2023-10-03
+
+* [Added] Support partial capture for a charge (https://github.com/omise/omise-python/pull/64)
+
 ## [0.12.0] - 2022-01-11
 
 * [Changed] Allow access to metadata (https://github.com/omise/omise-python/pull/53)
