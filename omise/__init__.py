@@ -779,13 +779,14 @@ class Charge(_MainResource, Base):
                           self._instance_path(self._attributes['id']),
                           changed))
 
-    def capture(self):
+    def capture(self, **kwargs):
         """Capture an authorized charge.
 
+        :param \*\*kwargs: arguments to perform a capture.
         :rtype: Charge
         """
         path = self._instance_path(self._attributes['id']) + ('capture',)
-        return self._reload_data(self._request('post', path))
+        return self._reload_data(self._request('post', path, kwargs))
 
     def reverse(self):
         """Reverse an uncaptured charge.

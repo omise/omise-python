@@ -1,5 +1,6 @@
-import mock
 import unittest
+
+import mock
 
 from .helper import _ResourceMixin
 
@@ -138,6 +139,92 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         self.assertTrue(isinstance(charge.card, card_class_))
         self.assertEqual(charge.id, 'chrg_test')
         self.assertEqual(charge.amount, 100000)
+        self.assertEqual(charge.currency, 'thb')
+        self.assertEqual(charge.description, 'Order-384')
+        self.assertEqual(charge.ip, '127.0.0.1')
+        self.assertEqual(charge.card.id, 'card_test')
+        self.assertEqual(charge.card.last_digits, '4242')
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges',
+            {
+                'amount': 100000,
+                'currency': 'thb',
+                'description': 'Order-384',
+                'ip': '127.0.0.1',
+                'card': 'tokn_test',
+            }
+        )
+
+    @mock.patch('requests.post')
+    def test_create_partial_charge(self, api_call):
+        class_ = self._getTargetClass()
+        card_class_ = self._getCardClass()
+        self.mockResponse(api_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "location": "/charges/chrg_test",
+            "amount": 100000,
+            "authorization_type":"pre_auth",
+            "authorized_amount": 100000,
+            "captured_amount": 0,
+            "currency": "thb",
+            "description": "Order-384",
+            "capture": false,
+            "authorized": false,
+            "reversed": false,
+            "captured": false,
+            "transaction": null,
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "failure_code": null,
+            "failure_message": null,
+            "card": {
+                "object": "card",
+                "id": "card_test",
+                "livemode": false,
+                "country": "th",
+                "city": "Bangkok",
+                "postal_code": "10320",
+                "financing": "credit",
+                "last_digits": "4242",
+                "brand": "Visa",
+                "expiration_month": 10,
+                "expiration_year": 2018,
+                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                "name": "Somchai Prasert",
+                "created": "2014-10-20T09:41:56Z"
+            },
+            "customer": null,
+            "ip": "127.0.0.1",
+            "created": "2014-10-21T11:12:28Z"
+        }""")
+
+        charge = class_.create(
+            amount=100000,
+            currency='thb',
+            description='Order-384',
+            ip='127.0.0.1',
+            card='tokn_test',
+        )
+
+        self.assertTrue(isinstance(charge, class_))
+        self.assertTrue(isinstance(charge.card, card_class_))
+        self.assertEqual(charge.id, 'chrg_test')
+        self.assertEqual(charge.amount, 100000)
+        self.assertEqual(charge.authorization_type, "pre_auth")
+        self.assertEqual(charge.authorized_amount, 100000)
+        self.assertEqual(charge.captured_amount, 0)
         self.assertEqual(charge.currency, 'thb')
         self.assertEqual(charge.description, 'Order-384')
         self.assertEqual(charge.ip, '127.0.0.1')
@@ -734,6 +821,74 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         self.assertRequest(
             api_call,
             'https://api.omise.co/charges/chrg_test/capture',
+        )
+
+    @mock.patch('requests.post')
+    def test_capture_with_args(self, api_call):
+        charge = self._makeOne()
+        class_ = self._getTargetClass()
+        self.mockResponse(api_call, """{
+            "object": "charge",
+            "id": "chrg_test",
+            "livemode": false,
+            "location": "/charges/chrg_test",
+            "amount": 100000,
+            "authorization_type": "pre_auth",
+            "authorized_amount": 100000,
+            "captured_amount": 50000,
+            "currency": "thb",
+            "description": "New description",
+            "capture": false,
+            "authorized": true,
+            "reversed": false,
+            "captured": true,
+            "transaction": null,
+            "failure_code": null,
+            "failure_message": null,
+            "refunded": 0,
+            "refunds": {
+                "object": "list",
+                "from": "1970-01-01T00:00:00+00:00",
+                "to": "2015-01-26T16:20:43+00:00",
+                "offset": 0,
+                "limit": 20,
+                "total": 0,
+                "data": [],
+                "location": "/charges/chrg_test/refunds"
+            },
+            "card": {
+                "object": "card",
+                "id": "card_test",
+                "livemode": false,
+                "country": "th",
+                "city": "Bangkok",
+                "postal_code": "10320",
+                "financing": "credit",
+                "last_digits": "4242",
+                "brand": "Visa",
+                "expiration_month": 10,
+                "expiration_year": 2018,
+                "fingerprint": "098f6bcd4621d373cade4e832627b4f6",
+                "name": "Somchai Prasert",
+                "created": "2014-10-20T09:41:56Z"
+            },
+            "customer": null,
+            "ip": "127.0.0.1",
+            "created": "2014-10-21T11:12:28Z"
+        }""")
+
+        self.assertTrue(isinstance(charge, class_))
+        self.assertFalse(charge.captured)
+        charge.capture(capture_amount=50000)
+
+        self.assertTrue(charge.captured)
+        self.assertEqual(charge.captured_amount, 50000)
+        self.assertEqual(charge.authorization_type, "pre_auth")
+        self.assertEqual(charge.authorized_amount, 100000)
+        self.assertRequest(
+            api_call,
+            'https://api.omise.co/charges/chrg_test/capture',
+            {'capture_amount': 50000}
         )
 
     @mock.patch('requests.post')
