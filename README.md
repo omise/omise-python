@@ -4,17 +4,17 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
 [![PyPi Version](https://img.shields.io/pypi/v/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
 
-Please raise an issue or contact [support@omise.co](mailto:support@omise.co) if you have any question regarding this library and the functionality it provides.
+Please raise an issue or contact [support@pn.ooo](mailto:support@opn.ooo) if you have a question regarding this library and the functionality it provides.
 
 ## Installation
 
-If you simply want to use Omise Python client in your application, you can install it using [pip](http://www.pip-installer.org/en/latest/index.html):
+To use Omise Python client in your application, install it using [pip](http://www.pip-installer.org/en/latest/index.html):
 
 ```
 pip install omise
 ```
 
-Or `easy_install` in case your system do not have pip installed:
+Or `easy_install` in case your system does not have `pip` installed:
 
 ```
 easy_install omise
@@ -29,11 +29,11 @@ The Omise Python client officially supports the following Python versions:
 * Python 3.10
 * Python 3.11
 
-Any versions not listed here _may_ work but they are not automatically tested.
+Versions not listed here _may_ work but they are not automatically tested.
 
 ## Usage
 
-Please refer to examples in our [API documentation](https://www.omise.co/docs).
+Please refer to examples in our [API documentation](https://docs.opn.ooo/).
 For basic usage, you can use the package in your application by importing `omise` and setting the secret key:
 
 ```python
@@ -41,9 +41,9 @@ import omise
 omise.api_secret = 'skey_test_4xsjvwfnvb2g0l81sjz'
 ```
 
-After the secret key is set, you can use all APIs which use secret key authentication.
+After the secret key is set, you can use all APIs that use secret key authentication.
 
-To create a new credit card charge, use Omise.js to create a new token and run the following:
+To create a new card charge, use Omise.js to create a new token and run the following:
 
 ``` python
 token_id = "tokn_test_no1t4tnemucod0e51mo" # see https://www.omise.co/tokens-api#create
@@ -80,12 +80,12 @@ customer.destroyed
 # True
 ```
 
-In case of error (such as authentication failure, invalid card and others as listed in [errors](https://www.omise.co/api-errors/) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raised.
+In case of error (such as authentication failure, invalid card and others as listed in [errors](https://docs.opn.ooo/api-errors) section in the documentation), the error of a subclass `omise.errors.BaseError` will be raised.
 Your application code should handle these errors appropriately.
 
 ### API version
 
-In case you want to enforce API version the application use, you can specify it by setting `api_version`.
+To enforce the API version that the application must use, set `api_version`.
 The version specified by this setting will override the version setting in your account.
 This is useful if you have multiple environments with different API versions (e.g. development on the latest but production on the older version).
 
@@ -94,7 +94,7 @@ import omise
 omise.api_version = '2019-05-29'
 ```
 
-It is highly recommended to set this version to the current version you're using.
+It is highly recommended to set this version to the current version that you are using.
 
 ## Contributing
 
