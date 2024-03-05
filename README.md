@@ -6,6 +6,11 @@
 
 Please raise an issue or contact [support@pn.ooo](mailto:support@opn.ooo) if you have a question regarding this library and the functionality it provides.
 
+## Security Warning
+
+**Please do NOT use Omise Python client versions less than 0.9.0, as they are outdated and have security vulnerabilities.**
+
+
 ## Installation
 
 To use Omise Python client in your application, install it using [pip](http://www.pip-installer.org/en/latest/index.html):
