@@ -1,4 +1,4 @@
-# Omise Python Client
+# Omise Python Library
 
 ![Build Status](https://github.com/omise/omise-python/workflows/Python%20package/badge.svg?branch=master)
 [![Python Versions](https://img.shields.io/pypi/pyversions/omise.svg?style=flat-square)](https://pypi.python.org/pypi/omise/)
@@ -8,12 +8,12 @@ Please raise an issue or contact [support@pn.ooo](mailto:support@opn.ooo) if you
 
 ## Security Warning
 
-**Please do NOT use Omise Python client versions less than 0.9.0, as they are outdated and have security vulnerabilities.**
+**Please do NOT use Omise Python library versions less than 0.9.0, as they are outdated and have security vulnerabilities.**
 
 
 ## Installation
 
-To use Omise Python client in your application, install it using [pip](http://www.pip-installer.org/en/latest/index.html):
+To use Omise Python library in your application, install it using [pip](http://www.pip-installer.org/en/latest/index.html):
 
 ```
 pip install omise
@@ -25,7 +25,7 @@ Or `easy_install` in case your system does not have `pip` installed:
 easy_install omise
 ```
 
-The Omise Python client officially supports the following Python versions:
+The Omise Python library officially supports the following Python versions:
 
 * Python 2.7
 * Python 3.7
@@ -103,7 +103,7 @@ It is highly recommended to set this version to the current version that you are
 
 ## Contributing
 
-The Omise Python client uses `tox` and [Docker](https://docs.docker.com/) for testing.
+The Omise Python library uses `tox` and [Docker](https://docs.docker.com/) for testing.
 All changes must be tested against all supported Python versions.
 You can run tests using the following instructions:
 
