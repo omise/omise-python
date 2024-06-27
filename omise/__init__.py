@@ -282,7 +282,7 @@ class Account(_MainResource, Base):
             >>> account.update(webhook_uri='https://omise.co/webhook')
             <Account id='account_test_5kms3d70v77fs5c37v6' at 0x108cec240>
 
-        :param \*\*kwargs: arguments to update an account.
+        :param **kwargs: arguments to update an account.
         :rtype: Account
 
         .. _update an account:
@@ -453,7 +453,7 @@ class Token(_VaultResource, Base):
 
         .. _create a token: https://docs.omise.co/api/tokens/#create-a-token
 
-        :param \*\*kwargs: arguments to create a token.
+        :param **kwargs: arguments to create a token.
         :rtype: Token
         """
         transformed_args = dict(card=kwargs)
@@ -549,7 +549,7 @@ class Card(_MainResource, Base):
             ... )
             <Card id='card_test_4xsjw0t21xaxnuzi9gs' at 0x7f7911746ab8>
 
-        :param \*\*kwargs: arguments to update a card.
+        :param **kwargs: arguments to update a card.
         :rtype: Card
 
         .. _update a card: https://docs.omise.co/api/cards/#update-a-card
@@ -714,7 +714,7 @@ class Charge(_MainResource, Base):
 
         .. _create a charge: https://docs.omise.co/api/charges/#create-a-charge
 
-        :param \*\*kwargs: arguments to create a charge.
+        :param **kwargs: arguments to create a charge.
         :rtype: Charge
         """
         return _as_object(
@@ -767,7 +767,7 @@ class Charge(_MainResource, Base):
             >>> charge.update(description='Another description')
             <Charge id='chrg_test_4xso2s8ivdej29pqnhz' at 0x7fed3241bab8>
 
-        :param \*\*kwargs: arguments to update a charge.
+        :param **kwargs: arguments to update a charge.
         :rtype: Charge
 
         .. _update a charge: https://docs.omise.co/api/charges/#update-a-charge
@@ -782,7 +782,7 @@ class Charge(_MainResource, Base):
     def capture(self, **kwargs):
         """Capture an authorized charge.
 
-        :param \*\*kwargs: arguments to perform a capture.
+        :param **kwargs: arguments to perform a capture.
         :rtype: Charge
         """
         path = self._instance_path(self._attributes['id']) + ('capture',)
@@ -933,7 +933,7 @@ class Customer(_MainResource, Base):
         .. _create a customer:
         ..     https://docs.omise.co/api/customers/#create-a-customer
 
-        :param \*\*kwargs: arguments to create a customer.
+        :param **kwargs: arguments to create a customer.
         :rtype: Customer
         """
         return _as_object(
@@ -981,7 +981,7 @@ class Customer(_MainResource, Base):
             ... )
             <Customer id='cust_test_4xtrb759599jsxlhkrb' at 0x7f319de7f990>
 
-        :param \*\*kwargs: arguments to update a customer.
+        :param **kwargs: arguments to update a customer.
         :rtype: Customer
 
         .. _update a customer:
@@ -1214,7 +1214,7 @@ class Dispute(_MainResource, Base):
             >>> dspt.update(message='Proofs and other information')
             <Dispute id='dspt_test_4zgf15h89w8t775kcm8' at 0x7fd06cd56210>
 
-        :param \*\*kwargs: arguments to update a dispute.
+        :param **kwargs: arguments to update a dispute.
         :rtype: Recipient
 
         .. _update a dispute:
@@ -1468,7 +1468,7 @@ class Link(_MainResource, Base):
 
         .. _create a link: https://docs.omise.co/links-api/#create-a-link
 
-        :param \*\*kwargs: arguments to create a link.
+        :param **kwargs: arguments to create a link.
         :rtype: Link
         """
         return _as_object(
@@ -1648,7 +1648,7 @@ class Recipient(_MainResource, Base):
         .. _create a recipient:
         ..     https://docs.omise.co/api/recipients/#recipients-create
 
-        :param \*\*kwargs: arguments to create a recipient.
+        :param **kwargs: arguments to create a recipient.
         :rtype: Recipient
         """
         return _as_object(
@@ -1709,7 +1709,7 @@ class Recipient(_MainResource, Base):
             ... )
             <Recipient id='recp_test_5086xmr74vxs0ajpo78' at 0x7f79c41e9d00>
 
-        :param \*\*kwargs: arguments to update a recipient.
+        :param **kwargs: arguments to update a recipient.
         :rtype: Recipient
 
         .. _update a recipient:
@@ -1891,7 +1891,7 @@ class Schedule(_MainResource, Base):
         .. _create a schedule:
         ..     https://docs.omise.co/schedules-api#create-a-schedule
 
-        :param \*\*kwargs: arguments to create a schedule.
+        :param **kwargs: arguments to create a schedule.
         :rtype: Schedule
         """
         return _as_object(
@@ -2076,7 +2076,7 @@ class Transfer(_MainResource, Base):
         .. _create a transfer:
         ..     https://docs.omise.co/api/transfers/#create-a-transfer
 
-        :param \*\*kwargs: arguments to create a transfer.
+        :param **kwargs: arguments to create a transfer.
         :rtype: Transfer
         """
         return _as_object(
@@ -2135,7 +2135,7 @@ class Transfer(_MainResource, Base):
             >>> trsf.update(amount=50000)
             <Transfer id='trsf_test_4xs5px8c36dsanuwztf' at 0x7f037c6c9f90>
 
-        :param \*\*kwargs: arguments to update the transfer.
+        :param **kwargs: arguments to update the transfer.
         :rtype: Customer
 
         .. _update a transfer:
