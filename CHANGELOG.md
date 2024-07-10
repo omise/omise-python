@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.14.0] - 2024-07-10
+
+* [Fix] Resolve the syntax warning (https://github.com/omise/omise-python/pull/73)
+
 ## [0.13.0] - 2023-10-03
 
 * [Added] Support partial capture for a charge (https://github.com/omise/omise-python/pull/64)
