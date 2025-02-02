@@ -742,7 +742,7 @@ class Charge(_MainResource, Base):
 
         :rtype: LazyCollection
         """
-        return LazyCollection(cls._collection_path(), fromDate = kwargs.pop('fromDate', None), toDate = kwargs.pop('toDate', None))
+        return LazyCollection(cls._collection_path(), fromDate=kwargs.pop('fromDate', None), toDate=kwargs.pop('toDate', None))
 
     def reload(self):
         """Reload the charge details.
@@ -1054,8 +1054,8 @@ class LazyCollection(object):
     def __init__(self, collection_path, **kwargs):
         self.collection_path = collection_path
         self._exhausted = False
-        self.fromDate = kwargs.pop('fromDate')
-        self.toDate = kwargs.pop('toDate')
+        self.fromDate = kwargs.pop('fromDate', None)
+        self.toDate = kwargs.pop('toDate', None)
 
     def __len__(self):
         return self._fetch_objects(limit=1, offset=0)['total']
