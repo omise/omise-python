@@ -737,12 +737,12 @@ class Charge(_MainResource, Base):
         return _as_object(cls._request('get', cls._collection_path()))
 
     @classmethod
-    def list(cls):
+    def list(cls, **kwargs):
         """Return all charges that belongs to your account
 
         :rtype: LazyCollection
         """
-        return LazyCollection(cls._collection_path())
+        return LazyCollection(cls._collection_path(), fromDate=kwargs.pop('fromDate', None), toDate=kwargs.pop('toDate', None))
 
     def reload(self):
         """Reload the charge details.
@@ -1050,9 +1050,12 @@ class Customer(_MainResource, Base):
 
 class LazyCollection(object):
     """Proxy class representing a lazy collection of items."""
-    def __init__(self, collection_path):
+
+    def __init__(self, collection_path, **kwargs):
         self.collection_path = collection_path
         self._exhausted = False
+        self.fromDate = kwargs.pop('fromDate', None)
+        self.toDate = kwargs.pop('toDate', None)
 
     def __len__(self):
         return self._fetch_objects(limit=1, offset=0)['total']
@@ -1104,6 +1107,8 @@ class LazyCollection(object):
 
     def _fetch_objects(self, **kwargs):
         order = kwargs.pop('order', None)
+        fromDate = self.fromDate
+        toDate = self.toDate
 
         return Request(api_secret, api_main, api_version).send(
             'get',
@@ -1111,7 +1116,9 @@ class LazyCollection(object):
             payload={
                 'limit': kwargs['limit'],
                 'offset': kwargs['offset'],
-                'order': order
+                'order': order,
+                'from': fromDate,
+                'to': toDate
             }
         )
 
