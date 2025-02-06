@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.15.0] - 2025-02-06
+
+* [Added] Add date filtering for charge list (https://github.com/omise/omise-python/pull/75)
+
 ## [0.14.0] - 2024-07-10
 
 * [Fix] Resolve the syntax warning (https://github.com/omise/omise-python/pull/73)
