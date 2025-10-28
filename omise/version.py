@@ -1,2 +1,5 @@
-import pkg_resources
-__VERSION__ = pkg_resources.require('omise')[0].version
+from importlib.metadata import version, PackageNotFoundError
+try:
+    __VERSION__ = version("omise")
+except PackageNotFoundError:
+    __VERSION__ = "unknown"
