@@ -18,9 +18,11 @@ jobs:
         python-version: 3.9
 
     - name: Build and Upload
+      env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}  
       run: |
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip twine wheel
         python setup.py sdist bdist_wheel
-        twine upload dist/* --verbose --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+        twine upload dist/* --username __token__ --password "$PYPI_TOKEN"
