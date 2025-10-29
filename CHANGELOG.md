@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.15.1] - 2025-10-28
+
+- [Fixed] Replaced deprecated `pkg_resources` with `importlib.metadata` to prevent warnings in Python 3.12+ (https://github.com/omise/omise-python/pull/77)
+
 ## [0.15.0] - 2025-02-06
 
 * [Added] Add date filtering for charge list (https://github.com/omise/omise-python/pull/75)
