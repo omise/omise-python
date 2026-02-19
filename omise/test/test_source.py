@@ -14,7 +14,7 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
         return self._getTargetClass().from_data({
             'object': 'source',
             'id': 'src_test',
-            'type': 'internet_banking_test',
+            'type': 'promptpay',
             'flow': 'redirect',
             'amount': 100000,
             'currency': 'thb'
@@ -26,7 +26,7 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
         self.mockResponse(api_call, """{
             "object": "source",
             "id": "src_test",
-            "type": "internet_banking_test",
+            "type": "promptpay",
             "flow": "redirect",
             "amount": 100000,
             "currency": "thb"
@@ -35,7 +35,7 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
         source = class_.create(
             amount=100000,
             currency='thb',
-            type='internet_banking_test'
+            type='promptpay'
         )
         self.assertTrue(isinstance(source, class_))
         self.assertEqual(source.id, 'src_test')
@@ -46,7 +46,7 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
             {
                 'amount': 100000,
                 'currency': 'thb',
-                'type': 'internet_banking_test'
+                'type': 'promptpay'
             }
         )
 
@@ -86,7 +86,7 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
         self.mockResponse(api_call, """{
             "object": "source",
             "id": "src_test",
-            "type": "internet_banking_test",
+            "type": "promptpay",
             "flow": "redirect",
             "amount": 100000,
             "currency": "thb"
@@ -95,7 +95,7 @@ class SourceTest(_ResourceMixin, unittest.TestCase):
         source = class_.retrieve('src_test')
         self.assertTrue(isinstance(source, class_))
         self.assertEqual(source.id, 'src_test')
-        self.assertEqual(source.type, 'internet_banking_test')
+        self.assertEqual(source.type, 'promptpay')
         self.assertEqual(source.flow, 'redirect')
         self.assertEqual(source.amount, 100000)
         self.assertEqual(source.currency, 'thb')

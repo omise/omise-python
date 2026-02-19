@@ -285,7 +285,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
             "source": {
                 "object": "source",
                 "id": "src_test",
-                "type": "internet_banking_test",
+                "type": "promptpay",
                 "flow": "redirect",
                 "amount": 100000,
                 "currency": "thb"
@@ -320,7 +320,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
             amount=100000,
             currency='thb',
             source={
-                'type': 'internet_banking_test'
+                'type': 'promptpay'
             },
             return_uri='http://www.google.com'
         )
@@ -337,7 +337,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
                 'amount': 100000,
                 'currency': 'thb',
                 'source': {
-                    'type': 'internet_banking_test'
+                    'type': 'promptpay'
                 },
                 'return_uri': 'http://www.google.com'
             }

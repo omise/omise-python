@@ -1994,7 +1994,7 @@ class Source(_MainResource, Base):
         >>> source = omise.Source.create(
             amount=100000,
             currency='thb',
-            type='internet_banking_scb'
+            type='promptpay'
         )
         <Source id='src_test_59ldo3ltuz7418db4ol' at 0x106473668>
         >>> charge = omise.Charge.create(
@@ -2013,7 +2013,7 @@ class Source(_MainResource, Base):
             amount=100000,
             currency='thb',
             source={
-                'type': 'internet_banking_scb'
+                'type': 'promptpay'
             },
             return_uri='https://www.omise.co'
         )
