@@ -835,7 +835,7 @@ class Charge(_MainResource, Base):
         return LazyCollection(self._nested_object_path(Event))
 
     @classmethod
-    def schedule(cls):
+    def list_schedules(cls):
         """Retrieve all charge schedules.
 
         :rtype: Schedule
@@ -846,6 +846,7 @@ class Charge(_MainResource, Base):
         return _as_object(
             cls._request('get',
                          ('charges', 'schedules',)))
+
 
 
 class Collection(Base):

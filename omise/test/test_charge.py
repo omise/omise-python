@@ -1060,7 +1060,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
         )
 
     @mock.patch('requests.get')
-    def test_schedule(self, api_call):
+    def test_list_schedules(self, api_call):
         class_ = self._getTargetClass()
         collection_class_ = self._getCollectionClass()
         self.mockResponse(api_call, """{
@@ -1124,7 +1124,7 @@ class ChargeTest(_ResourceMixin, unittest.TestCase):
             ]
         }""")
 
-        schedules = class_.schedule()
+        schedules = class_.list_schedules()
         self.assertTrue(isinstance(schedules, collection_class_))
         self.assertEqual(schedules.total, 1)
         self.assertEqual(schedules.location, '/charges/schedules')
