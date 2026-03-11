@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.16.0] - 2026-03-11
+
+* [Fixed] Fix name collision in charge schedule function (https://github.com/omise/omise-python/pull/80)
+* [Remove] Sunset internet banking (https://github.com/omise/omise-python/pull/79)
+
 ## [0.15.1] - 2025-10-28
 
 - [Fixed] Replaced deprecated `pkg_resources` with `importlib.metadata` to prevent warnings in Python 3.12+ (https://github.com/omise/omise-python/pull/77)
