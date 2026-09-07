@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        name: "gitleaks - Detect secrets and non-production Omise hosts"
+        description: "Detect secrets and non-production Omise hosts using gitleaks"
+        entry: gitleaks detect --verbose --redact --no-git --source . --config .gitleaks.toml
+        language: golang
+        stages: [pre-commit]
+        always_run: true
+        pass_filenames: false

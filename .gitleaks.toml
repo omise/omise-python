@@ -1,0 +1,33 @@
+title = "Omise Python Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "non-production-omise-host"
+description = "Non-production Omise host"
+regex = '''https?://([A-Za-z0-9.-]*omise[A-Za-z0-9.-]*)'''
+secretGroup = 1
+
+  [[rules.allowlists]]
+  description = "Official Omise hosts"
+  regexes = [
+    '''^([A-Za-z0-9-]+\.)*omise\.co$''',
+  ]
+
+[[allowlists]]
+description = "Ignored generated files"
+paths = [
+  '''^\.tox/''',
+  '''^build/''',
+  '''^omise\.egg-info/''',
+  '''(^|/)__pycache__/''',
+  '''\.pyc$''',
+]
+
+[[allowlists]]
+description = "Ignore test tokens and mock credentials"
+regexTarget = "match"
+regexes = [
+  '''(?:skey|pkey|tokn)_test_[a-zA-Z0-9]+''',
+]
