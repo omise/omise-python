@@ -6,7 +6,7 @@ useDefault = true
 [[rules]]
 id = "non-production-omise-host"
 description = "Non-production Omise host"
-regex = '''https?://([A-Za-z0-9.-]*omise[A-Za-z0-9.-]*)'''
+regex = '''(?:https?://)?((?:\b[a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]*omise[a-zA-Z0-9-]*\.co)'''
 secretGroup = 1
 
   [[rules.allowlists]]

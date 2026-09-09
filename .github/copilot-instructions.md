@@ -24,7 +24,7 @@ and vault calls. It contains the production endpoint constants.
 
 **Changes to Block (Red Flag):**
 
-- Any change introducing a non-omise.co domain for production endpoints
+- Any change introducing a non omise.co domain for production endpoints
 - Hardcoding non-production Omise URLs in production code paths (regex: `https?://[a-zA-Z0-9.-]*omise[a-zA-Z0-9.-]*(?<!omise\.co)`)
 - Changing `api_main` or `api_vault` to anything other than the official production domains:
 	- `https://api.omise.co`
